@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Contact — Destiny Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,400&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav>
+  <div class="wrap navrow">
+    <a class="brand" href="index.html">Destiny</a>
+    <div class="navlinks">
+      <a href="index.html">Home</a>
+      <a href="work.html">Work</a>
+      <a href="films.html">Films</a>
+      <a href="studio.html">Studio</a>
+      <a href="services.html">Services</a>
+      <a href="contact.html" class="active">Contact</a>
+    </div>
+    <a class="navcta" href="contact.html">Chat with us</a>
+    <div class="burger" id="burger"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+<div class="mobilemenu" id="mobilemenu">
+  <a href="index.html">Home</a>
+  <a href="work.html">Work</a>
+  <a href="films.html">Films</a>
+  <a href="studio.html">Studio</a>
+  <a href="services.html">Services</a>
+  <a href="contact.html" class="active">Contact</a>
+</div>
+
+<div class="wrap pagehead">
+  <div class="kicker">CONTACT</div>
+  <h1>Tell us what you're planning.</h1>
+  <p>Send your date, city, and what kind of day it is — we'll reply within one business day.</p>
+</div>
+
+<section class="wrap reveal" style="padding-bottom:50px;">
+  <!-- NOTE: action="" needs a real form handler (Formspree, Netlify Forms, or your own backend). -->
+  <form class="form-grid" action="#" method="POST">
+    <div class="field">
+      <label for="name">Name</label>
+      <input id="name" name="name" type="text" required>
+    </div>
+    <div class="field">
+      <label for="type">Event type</label>
+      <select id="type" name="type">
+        <option>Wedding</option>
+        <option>Corporate event</option>
+        <option>Birthday / Celebration</option>
+        <option>Product / Commercial</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="date">Event date</label>
+      <input id="date" name="date" type="date">
+    </div>
+    <div class="field">
+      <label for="city">City</label>
+      <input id="city" name="city" type="text">
+    </div>
+    <div class="field">
+      <label for="msg">Tell us more</label>
+      <textarea id="msg" name="message" placeholder="Guest count, venue, anything else..."></textarea>
+    </div>
+    <button class="btn" type="submit">Send inquiry →</button>
+  </form>
+
+  <div class="contact-info">
+    <a href="mailto:destinyeventsandphotography@gmail.com">destinyeventsandphotography@gmail.com</a>
+    <a href="https://wa.me/919108727795">WhatsApp — 910 8727 795</a>
+    <a href="https://www.instagram.com/destinyeventsandphotography/">@destinyeventsandphotography</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-row">
+    <div>© 2026 Destiny Studio</div>
+    <div class="links">
+      <a href="mailto:destinyeventsandphotography@gmail.com">Email</a>
+      <a href="https://wa.me/919108727795">WhatsApp</a>
+      <a href="https://www.instagram.com/destinyeventsandphotography/">Instagram</a>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js" defer></script>
+</body>
+</html>

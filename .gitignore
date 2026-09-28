@@ -1,0 +1,43 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# build output
+.next/
+out/
+build/
+dist/
+*.tsbuildinfo
+
+# testing
+coverage/
+
+# env — never commit real secrets
+.env
+.env*.local
+.env.production
+
+# logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# os / editor junk
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# vercel / deployment
+.vercel
+
+# NOTE ON public/media
+# The videos are deliberately NOT ignored. They are the product, and the app needs
+# them present to build and deploy — a clone without them ships broken video.
+# Total is ~178MB across 6 files; the largest is 61MB, under GitHub's 100MB
+# per-file hard limit. See README.md > Media for the full inventory.
+# If this repo ever needs to get lighter, the move is git-lfs, not a gitignore
+# rule: excluding the files would break deploys.

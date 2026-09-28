@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+/* Design tokens — single source of truth. Generates bg-bg, text-paper, text-gold, border-line, font-display... */
+@theme {
+  --color-bg: #0B0B0C;
+  --color-bg2: #141416;
+  --color-paper: #F3F1EC;
+  --color-gold: #C9A15A;
+  --color-mute: #9C9A96;
+  --color-line: rgb(243 241 236 / 0.12);
+
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-body: var(--font-manrope), system-ui, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+body { background: var(--color-bg); color: var(--color-paper); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
