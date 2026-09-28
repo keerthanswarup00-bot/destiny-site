@@ -1,0 +1,27 @@
+# Keep the upload to source + committed media only.
+# Without this, the CLI would need explicit rules to avoid shipping
+# node_modules (373MB) and .next (286MB) to the build container.
+
+node_modules/
+.next/
+out/
+build/
+dist/
+coverage/
+
+*.tsbuildinfo
+*.log
+npm-debug.log*
+
+.env
+.env*.local
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+.vercel
+
+# Note: public/media is intentionally NOT ignored. The 178MB of video is
+# served as static assets and is part of the site.

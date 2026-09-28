@@ -35,12 +35,12 @@ build; everything reuses existing components.
 | --- | --- | --- |
 | `/` | static | Home. Hero, film block, coverflow categories, about, heritage, testimonials, reel carousel, chat CTA. |
 | `/work` | dynamic | Portfolio. Reads `?cat=<id>` and scrolls straight to the filtered gallery when one is present. |
+| `/studio` | static | Studio. Scroll-driven history timeline (1972 → 2024) plus the crew section. |
 
-`/films`, `/studio` and `/contact` are linked in the nav but do not exist yet — they
-were never built. The old static prototype has drafts of all three in
-`legacy-static-site/`.
+`/films` and `/contact` are linked in the nav but do not exist yet — they were never
+built. The old static prototype has drafts of both in `legacy-static-site/`.
 
-## The two pages in detail
+## The pages in detail
 
 Component-level notes live next to the code, and are the thing to read before editing:
 
@@ -49,6 +49,9 @@ Component-level notes live next to the code, and are the thing to read before ed
   frame ratios, and the measurements behind each layout decision.
 - `destiny-home/lib/work.ts` — `PILLAR_OF` is the single source of truth for
   category mapping. `WORK_FILM` points the weddings film at its footage.
+- `destiny-home/components/sections/studio/README.md` — the studio page: the
+  scroll-driven "film develops" effect, the reduced-motion fallback, and the copy and
+  photos that still need real content.
 
 Two things that are easy to break:
 
@@ -88,7 +91,7 @@ because excluding the files breaks deploys.
 - `legacy-static-site/` — the original 8-page static prototype. Open
   `legacy-static-site/index.html` directly or serve the folder. Its own README
   documents the theme tokens and the placeholder-media conventions. Superseded by the
-  Next app, kept because it has drafts of the films/studio/contact pages.
+  Next app, kept because it has drafts of the films and contact pages.
 - `destiny-work/` — the work page exactly as first delivered, including
   `WorkChapters.tsx` and a 4-category `lib/constants.ts`. Both were replaced in the
   app. Kept as a record of the starting point.
