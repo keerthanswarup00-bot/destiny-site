@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { SITE } from "@/lib/constants";
 import { CONTACT, whatsappSendUrl } from "@/lib/contact";
 
 function CopyableRow({ label, value, href }: { label: string; value: string; href: string }) {
@@ -36,6 +37,14 @@ export default function DirectContact() {
         <CopyableRow label="WhatsApp" value={CONTACT.whatsappDisplay} href={whatsappSendUrl(CONTACT.whatsappNumber, "Hi Destiny, ")} />
         <CopyableRow label="Email" value={CONTACT.email} href={`mailto:${CONTACT.email}`} />
       </div>
+      <a
+        href={SITE.instagram}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-6 inline-flex items-center gap-2 bg-gold px-7 py-3.5 text-sm font-bold text-bg transition-opacity hover:opacity-90"
+      >
+        Visit Instagram →
+      </a>
       <p className="mt-4 text-xs leading-relaxed text-mute">
         {CONTACT.location} · {CONTACT.hours}
       </p>
