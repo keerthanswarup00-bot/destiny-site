@@ -4,6 +4,8 @@ export type Tone = "gold" | "steel" | "plum" | "teal" | "ember" | "olive" | "ind
 
 export const SITE = {
   name: "Destiny Events and Photography",
+  /** Short wordmark for the nav. Full `name` stays the document/SEO title. */
+  wordmark: "Destiny",
   tagline: "Events + Photography",
   whatsapp: "919108727795",
   email: "destinyeventsandphotography@gmail.com",

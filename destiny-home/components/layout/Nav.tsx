@@ -18,8 +18,17 @@ export default function Nav() {
     <>
       <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-bg/90 pt-[env(safe-area-inset-top)] backdrop-blur-md">
         <div className="mx-auto grid h-16 w-full max-w-[1320px] grid-cols-[1fr_auto_1fr] items-center gap-3 px-5 md:px-12">
-          <Link href="/" className="justify-self-start font-display text-lg font-semibold" onClick={() => setOpen(false)}>
-            {SITE.name}
+          {/* Wordmark: bigger than body copy, with the tagline tucked under it on phones only —
+              desktop has the room for one clean line and the two-line lockup just adds height. */}
+          <Link
+            href="/"
+            className="justify-self-start font-display text-[21px] font-semibold leading-none md:text-[23px]"
+            onClick={() => setOpen(false)}
+          >
+            <span className="block">{SITE.wordmark}</span>
+            <span className="mt-1 block font-body text-[9.5px] font-medium uppercase tracking-[0.18em] text-mute md:hidden">
+              {SITE.tagline}
+            </span>
           </Link>
 
           <nav aria-label="Primary" className="hidden justify-self-center gap-7 text-[13.5px] font-medium text-[#D8D6D2] md:flex">
