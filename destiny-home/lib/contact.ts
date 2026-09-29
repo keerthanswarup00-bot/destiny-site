@@ -11,12 +11,10 @@ export const EVENT_TYPES = [
   "Other",
 ] as const;
 
-// TODO(owner): the WhatsApp number and email below are the real ones. The CALL number is still
-// a placeholder — replace it with the line you actually want dialled, or delete phoneDisplay and
-// phoneTel and the Call row disappears with them. A dead tel: link is worse than no Call row.
+// Contact details used across the public contact and enquiry experience.
 export const CONTACT = {
-  phoneDisplay: "+91 98765 43210",
-  phoneTel: "+919876543210",
+  phoneDisplay: "+91 91087 27795",
+  phoneTel: "+919108727795",
   whatsappDisplay: "+91 91087 27795",
   whatsappNumber: "919108727795", // digits only, no + — used in wa.me links
   email: "destinyeventsandphotography@gmail.com",
