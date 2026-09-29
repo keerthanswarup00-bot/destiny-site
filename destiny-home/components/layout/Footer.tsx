@@ -13,6 +13,14 @@ export default function Footer() {
           <a href={`mailto:${SITE.email}`} className="hover:text-paper">Email</a>
           <a href={whatsappUrl()} className="hover:text-paper">WhatsApp</a>
           <a href={SITE.instagram} className="hover:text-paper">Instagram</a>
+          <a
+            href="https://aryansswaroop.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-paper"
+          >
+            Created by aryansswaroop.com
+          </a>
         </div>
       </div>
     </footer>
