@@ -9,9 +9,14 @@ import Container from "@/components/ui/Container";
 import SectionHead from "@/components/ui/SectionHead";
 import { CATEGORIES, type Category } from "@/lib/constants";
 
+/** A category that is guaranteed to have a photograph to show. */
+type StripCategory = Category & { image: string };
+
 /** Only the categories Destiny has a real frame for. The archive is a catalogue;
- *  this is a photography wall, so an unshot category never turns in it. */
-const STRIP = CATEGORIES.filter((c) => c.featured);
+ *  this is a photography wall, so an unshot category never turns in it. The cast
+ *  narrows `image` to string — the filter is the proof, so no card can render
+ *  without a source. */
+const STRIP = CATEGORIES.filter((c) => c.featured && c.image) as StripCategory[];
 const N = STRIP.length;
 /** Three copies of the list. Nothing scrolls — the track is translated — so one copy
  *  either side of the centre covers the viewport at both ends of the loop. */
@@ -64,7 +69,7 @@ function Card({
   tabbable,
   onActivate,
 }: {
-  category: Category;
+  category: StripCategory;
   index: number;
   focus: MotionValue<number>;
   tabbable: boolean;
@@ -87,7 +92,7 @@ function Card({
       className="group relative aspect-[3/4] w-[var(--cf-w)] shrink-0 cursor-pointer overflow-hidden rounded-[3px] bg-bg2 outline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold"
     >
       <Image
-        src={category.image ?? ""}
+        src={category.image}
         /* The card's aria-label already names the category, so the photo is
            decoration as far as a screen reader is concerned. */
         alt=""
