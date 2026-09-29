@@ -5,6 +5,7 @@ import {
   motion, useMotionTemplate, useMotionValueEvent, useReducedMotion, useScroll, useTransform, type MotionValue,
 } from "framer-motion";
 import MediaBlock from "@/components/ui/MediaBlock";
+import Container from "@/components/ui/Container";
 import { MILESTONES, type Milestone } from "@/lib/about";
 
 const N = MILESTONES.length;
@@ -68,7 +69,8 @@ function SceneText({ i, progress }: { i: number; progress: MotionValue<number> }
   );
 }
 
-export default function AboutTimeline() {
+/** The sticky era stage, split out so AboutHistory can put a real heading above it. */
+function TimelineStage() {
   const ref = useRef<HTMLElement>(null);
   const reduce = useReducedMotion();
   const [active, setActive] = useState(0);
@@ -86,8 +88,7 @@ export default function AboutTimeline() {
 
   if (reduce) {
     return (
-      <section aria-label="Our history">
-        <h1 className="sr-only">About: Swaroop Studios since 1972, and Destiny from 2024</h1>
+      <section aria-labelledby="history">
         {MILESTONES.map((m) => (
           <div key={m.id} className="relative min-h-[70svh] overflow-hidden border-b border-line">
             <MediaBlock src={m.image} alt={m.title} label={m.mediaHint} tone={m.tone} className="absolute inset-0" />
@@ -102,8 +103,7 @@ export default function AboutTimeline() {
   }
 
   return (
-    <section ref={ref} aria-label="Our history" style={{ height: `${N * 100}svh` }} className="relative">
-      <h1 className="sr-only">About: Swaroop Studios since 1972, and Destiny from 2024</h1>
+    <section ref={ref} aria-labelledby="history" style={{ height: `${N * 100}svh` }} className="relative">
       <div className="sticky top-0 h-[100svh] overflow-hidden bg-bg">
         <motion.div style={{ filter }} className="absolute inset-0">
           {MILESTONES.map((m, i) => (
@@ -146,5 +146,41 @@ export default function AboutTimeline() {
         </motion.p>
       </div>
     </section>
+  );
+}
+
+/**
+ * History: a real heading, then the scroll-driven stage.
+ *
+ * The stage opens on a full-height sticky frame, so the heading lives in its own short section
+ * above it and both variants of the stage point back at it with aria-labelledby.
+ */
+export default function AboutHistory() {
+  return (
+    <>
+      <section aria-labelledby="history" className="border-t border-line py-11 md:py-[70px]">
+        <Container>
+          <div className="grid gap-6 md:grid-cols-[1fr_1fr] md:gap-16">
+            <div>
+              <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-gold">
+                History
+              </p>
+              <h2
+                id="history"
+                className="max-w-[18ch] font-display text-[clamp(26px,6vw,42px)] font-normal italic leading-[1.08]"
+              >
+                A story that started in 1972.
+              </h2>
+            </div>
+            <p className="max-w-[50ch] self-end text-[15px] leading-[1.75] text-mute">
+              A father opened a studio. Decades of weddings and family photographs went through
+              it. His son looked at what it had become and what it could still be, and rebuilt it
+              as Destiny. The foundation never changed — the language did.
+            </p>
+          </div>
+        </Container>
+      </section>
+      <TimelineStage />
+    </>
   );
 }

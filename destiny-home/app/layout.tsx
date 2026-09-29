@@ -3,11 +3,12 @@ import { Fraunces, Manrope } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/layout/Nav";
 import Footer from "@/components/layout/Footer";
+import { SITE } from "@/lib/constants";
 
 const fraunces = Fraunces({ subsets: ["latin"], style: ["normal", "italic"], variable: "--font-fraunces", display: "swap" });
 const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope", display: "swap" });
 
-const SITE_URL = "https://destiny-site-omega.vercel.app";
+const SITE_URL = SITE.url;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

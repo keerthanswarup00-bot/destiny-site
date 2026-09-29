@@ -383,6 +383,11 @@ export default function CinematicReelCarousel() {
     const track = trackRef.current;
     if (!box || !track) return;
 
+    // The register callback writes slots into this array in place and never reassigns it, so
+    // holding the array across the effect is safe — and the cleanup then pauses exactly the
+    // elements this run saw, rather than whatever the ref holds when it tears down.
+    const videoEls = videos.current;
+
     const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     /** Reused across measurements so re-reading never allocates a new geometry mid-gesture. */
@@ -632,7 +637,7 @@ export default function CinematicReelCarousel() {
       box.removeEventListener("keydown", onKey);
       document.removeEventListener("visibilitychange", onVisibility);
       window.removeEventListener("resize", onResize);
-      for (const v of videos.current) v?.pause();
+      for (const v of videoEls) v?.pause();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pos, run]);
@@ -652,6 +657,7 @@ export default function CinematicReelCarousel() {
       v.pause();
     } else {
       held.current = false;
+      // eslint-disable-next-line react-hooks/immutability -- imperative <video> control: `v` is a DOM node off a ref, not render state.
       v.muted = sound.current;
       attempt(v, () => {
         if (!v.muted) {
@@ -666,6 +672,7 @@ export default function CinematicReelCarousel() {
     const v = videos.current[centreCard.current] ?? null;
     if (!v) return;
     const next = !v.muted;
+    // eslint-disable-next-line react-hooks/immutability -- as above: the DOM property, not the attribute, is the only thing that unmutes on iOS.
     v.muted = next; // property again — the attribute alone won't unmute on iOS
     sound.current = next;
     setMuted(next);

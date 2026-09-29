@@ -97,8 +97,14 @@ export default function CoverflowScroller() {
   // One focus value per rendered card, all written from a single rAF pass.
   const focuses = useMemo(() => Array.from({ length: TOTAL }, () => motionValue(0)), []);
 
-  /** Layout facts, re-measured on resize. */
-  const M = useRef({ cardW: 240, step: 256, boxW: 0, PERIOD: 1 }).current;
+  /**
+   * Layout facts, re-measured on resize.
+   *
+   * A ref, deliberately: it is written by `measure` and read by the rAF loop, so it must not be
+   * reactive. The ref is only ever unwrapped inside effects and handlers, never during render,
+   * which also means it has no business in a dependency array — a ref's identity is stable.
+   */
+  const M = useRef({ cardW: 240, step: 256, boxW: 0, PERIOD: 1 });
   /** Closest card to the centre, refreshed every frame — lets clicks ask "is this
    *  the centred one?" without reaching into the loop from the outside. */
   const nearest = useRef({ index: 0, logical: 0, d: Infinity });
@@ -125,11 +131,11 @@ export default function CoverflowScroller() {
     const step = cardW + gap;
     // The row is one uniform flex line, so the pitch between two copies of the
     // same card is exactly N steps — there is no extra gap at a copy boundary.
-    M.cardW = cardW;
-    M.step = step;
-    M.boxW = box.clientWidth;
-    M.PERIOD = N * step;
-  }, [M]);
+    M.current.cardW = cardW;
+    M.current.step = step;
+    M.current.boxW = box.clientWidth;
+    M.current.PERIOD = N * step;
+  }, []);
 
   const onActivate = useCallback(
     (index: number) => {
@@ -199,7 +205,7 @@ export default function CoverflowScroller() {
 
 
     const render = () => {
-      const { cardW, step, boxW, PERIOD } = M;
+      const { cardW, step, boxW, PERIOD } = M.current;
       if (!PERIOD) return;
       // p runs unbounded; fold it into one period so the loop is a pure modulo.
       // Shifting by exactly one period is a no-op visually — that's the loop.
@@ -235,7 +241,7 @@ export default function CoverflowScroller() {
     const logicalAt = () => nearest.current.logical;
 
     const stepTo = (d: 1 | -1) => {
-      st.targetP = st.p + d * M.step;
+      st.targetP = st.p + d * M.current.step;
       st.mode = "ease";
       st.v = 0;
       syncPlaying(false);
@@ -245,7 +251,7 @@ export default function CoverflowScroller() {
       let delta = logical - logicalAt();
       while (delta > N / 2) delta -= N;
       while (delta < -N / 2) delta += N;
-      st.targetP = st.p + delta * M.step;
+      st.targetP = st.p + delta * M.current.step;
       st.mode = "ease";
       st.v = 0;
       syncPlaying(false);
@@ -267,7 +273,7 @@ export default function CoverflowScroller() {
     const frame = (now: number) => {
       const dt = Math.min((now - last) / 1000, 0.05);
       last = now;
-      const autoV = M.step / SECONDS_PER_CARD;
+      const autoV = M.current.step / SECONDS_PER_CARD;
 
       if (st.mode === "drag") {
         // p is written directly by the pointer handler.
@@ -395,7 +401,7 @@ export default function CoverflowScroller() {
       document.removeEventListener("visibilitychange", onVisibility);
       window.removeEventListener("resize", onResize);
     };
-  }, [focuses, measure, M, onActivate]);
+  }, [focuses, measure, onActivate]);
 
   return (
     <section aria-labelledby="what-we-shoot" className="border-t border-line py-11 md:py-[70px]">

@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
+import { SITE } from "@/lib/constants";
 
-const SITE_URL = "https://destiny-site-omega.vercel.app";
+const SITE_URL = SITE.url;
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
