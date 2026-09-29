@@ -1,6 +1,7 @@
 import Container from "@/components/ui/Container";
 import Reveal from "@/components/ui/Reveal";
-import { CHAT_CTA, whatsappUrl } from "@/lib/constants";
+import Link from "next/link";
+import { CHAT_CTA } from "@/lib/constants";
 
 export default function ChatCTA() {
   return (
@@ -11,12 +12,12 @@ export default function ChatCTA() {
             {CHAT_CTA.title}
           </h2>
           <p className="mx-auto mb-6 max-w-[38ch] text-sm leading-relaxed text-mute">{CHAT_CTA.body}</p>
-          <a
-            href={whatsappUrl(CHAT_CTA.prefill)}
+          <Link
+            href={CHAT_CTA.href}
             className="inline-block bg-gold px-7 py-3.5 text-sm font-bold text-bg transition-opacity hover:opacity-90"
           >
             {CHAT_CTA.button} →
-          </a>
+          </Link>
         </Reveal>
       </Container>
     </section>

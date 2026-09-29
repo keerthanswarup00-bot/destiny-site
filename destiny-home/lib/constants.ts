@@ -124,7 +124,7 @@ export const REEL_SECTION = {
 
 export const CHAT_CTA = {
   title: "Let's plan your day, your way.",
-  body: "Chat with us directly for a personalised event plan or a custom cinematic film — no fixed packages, just your day.",
-  button: "Chat with us",
-  prefill: "Hi Destiny, I'd like to plan an event / film. Here are my details: ",
+  body: "Tell us the date and the kind of event, and we'll come back with a personalised plan or a custom cinematic film — no fixed packages, just your day.",
+  button: "Plan your day",
+  href: "/contact",
 };

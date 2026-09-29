@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { NAV_LINKS, SITE, CHAT_CTA, whatsappUrl } from "@/lib/constants";
+import { NAV_LINKS, SITE, CHAT_CTA } from "@/lib/constants";
 
 /** Logo left · menu centre · CTA right. Menu collapses to a slide-in panel on mobile. */
 export default function Nav() {
@@ -31,12 +31,12 @@ export default function Nav() {
           </nav>
 
           <div className="col-start-3 flex items-center gap-4 justify-self-end md:col-start-auto">
-            <a
-              href={whatsappUrl(CHAT_CTA.prefill)}
+            <Link
+              href={CHAT_CTA.href}
               className="whitespace-nowrap border border-gold px-3.5 py-2 text-xs font-semibold text-gold transition-colors hover:bg-gold hover:text-bg"
             >
               {CHAT_CTA.button}
-            </a>
+            </Link>
             <button
               type="button"
               aria-label={open ? "Close menu" : "Open menu"}
