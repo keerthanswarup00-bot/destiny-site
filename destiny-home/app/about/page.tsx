@@ -7,7 +7,6 @@ import AboutTeam from "@/components/sections/about/AboutTeam";
 import AboutWider from "@/components/sections/about/AboutWider";
 import AboutHistory from "@/components/sections/about/AboutHistory";
 import AboutLegacy from "@/components/sections/about/AboutLegacy";
-import AboutGrid from "@/components/sections/about/AboutGrid";
 import AboutCta from "@/components/sections/about/AboutCta";
 import { AMAN } from "@/lib/about";
 import { VIP } from "@/lib/contact";
@@ -71,7 +70,6 @@ export default function AboutPage() {
       <AboutWider />
       <AboutHistory />
       <AboutLegacy />
-      <AboutGrid />
       <AboutCta />
     </>
   );

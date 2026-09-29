@@ -1,19 +1,25 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion, motionValue, useTransform, type MotionValue } from "framer-motion";
-import MediaBlock from "@/components/ui/MediaBlock";
 import Reveal from "@/components/ui/Reveal";
 import Container from "@/components/ui/Container";
 import SectionHead from "@/components/ui/SectionHead";
-import { CATEGORIES } from "@/lib/constants";
+import { CATEGORIES, type Category } from "@/lib/constants";
 
-const N = CATEGORIES.length;
+/** Only the categories Destiny has a real frame for. The archive is a catalogue;
+ *  this is a photography wall, so an unshot category never turns in it. */
+const STRIP = CATEGORIES.filter((c) => c.featured);
+const N = STRIP.length;
 /** Three copies of the list. Nothing scrolls — the track is translated — so one copy
  *  either side of the centre covers the viewport at both ends of the loop. */
 const COPIES = 3;
 const TOTAL = N * COPIES;
+
+/** Card width, kept in CSS so the layout owns it. `sizes` below has to agree. */
+const SIZES = "(min-width:768px) 300px, 50vw";
 
 /** Autoplay pacing: seconds to travel one card. */
 const SECONDS_PER_CARD = 2.6;
@@ -24,8 +30,14 @@ const MAX_FLICK = 2400;
 const MIN_FLICK = 120;
 const FRICTION = 0.94;
 const STOP_V = 24;
-/** Exponential ease constant for arrow steps and click-to-centre. */
-const EASE = 0.002;
+/**
+ * Arrow steps and click-to-centre, as the share of the remaining gap closed in
+ * `STEP_EASE_MS`. Held as a per-millisecond decay so the ease is identical at
+ * 60Hz and 120Hz — anything stiffer than this and a step lands in a single
+ * frame, which reads as a cut rather than a move.
+ */
+const STEP_EASE_MS = 400;
+const EASE = Math.pow(0.1, 1 / STEP_EASE_MS);
 /** A press longer than this is a hold (used to stop the deck), not a tap. */
 const HOLD_MS = 300;
 
@@ -39,6 +51,12 @@ type Api = {
   park: () => void;
 };
 
+/**
+ * One category, full-bleed. The photograph is the card: it fills to the frame,
+ * and the only thing laid over it is a scrim weighted to the bottom so the label
+ * holds. Nothing is graded, and the whole deck keeps turning whether or not a
+ * card is hovered.
+ */
 function Card({
   category,
   index,
@@ -46,15 +64,15 @@ function Card({
   tabbable,
   onActivate,
 }: {
-  category: (typeof CATEGORIES)[number];
+  category: Category;
   index: number;
   focus: MotionValue<number>;
   tabbable: boolean;
   onActivate: (index: number) => void;
 }) {
-  const scale = useTransform(focus, [0, 1], [0.8, 1]);
-  const opacity = useTransform(focus, [0, 1], [0.45, 1]);
-  const labelOpacity = useTransform(focus, [0.6, 1], [0, 1]);
+  const scale = useTransform(focus, [0, 1], [0.82, 1]);
+  const opacity = useTransform(focus, [0, 1], [0.4, 1]);
+  const labelOpacity = useTransform(focus, [0.72, 1], [0, 1]);
 
   return (
     <motion.div
@@ -66,23 +84,39 @@ function Card({
       aria-label={`${category.label} — ${category.blurb}`}
       onClick={() => onActivate(index)}
       style={{ scale, opacity }}
-      className="relative aspect-[3/4] w-[var(--cf-w)] shrink-0 cursor-pointer overflow-hidden rounded-[3px] outline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold"
+      className="group relative aspect-[3/4] w-[var(--cf-w)] shrink-0 cursor-pointer overflow-hidden rounded-[3px] bg-bg2 outline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold"
     >
-      {/* MediaBlock is `relative` itself, so wrap it to fill the card. */}
-      <div className="absolute inset-0">
-        <MediaBlock
-          src={category.image}
-          alt={category.label}
-          label={category.label}
-          tone={category.tone}
-          sizes="(min-width:768px) 280px, 60vw"
-          className="h-full w-full"
-        />
-      </div>
-      <div className="absolute inset-0 z-10 bg-[linear-gradient(180deg,transparent_55%,rgba(11,11,12,.85)_100%)]" />
-      <motion.div style={{ opacity: labelOpacity }} className="absolute bottom-3 left-4 z-20 pr-3">
-        <p className="text-[13.5px] font-semibold">{category.label}</p>
-        <p className="mt-0.5 text-[11px] text-mute">{category.blurb}</p>
+      <Image
+        src={category.image ?? ""}
+        /* The card's aria-label already names the category, so the photo is
+           decoration as far as a screen reader is concerned. */
+        alt=""
+        fill
+        sizes={SIZES}
+        /* A moving strip can't lazy-load: cards slide in while you watch, and a
+           frame arriving a beat after its card reads as a flicker. There are only
+           six unique images across eighteen cards and `sizes` keeps each to a
+           ~320w variant, so eager here costs ~50KB a side and never competes with
+           the hero for bandwidth. */
+        loading="eager"
+        fetchPriority="low"
+        draggable={false}
+        className="object-cover transition-[transform,filter] duration-[900ms] ease-out motion-reduce:transition-none group-hover:scale-[1.045] group-hover:brightness-[1.08]"
+      />
+
+      {/* Legibility scrim, not a grade — clear through the middle so the
+          photograph reads as itself, weighted only where the label sits.
+          Lifts on hover so the frame brightens with the image. */}
+      <div className="pointer-events-none absolute inset-0 z-10 bg-[linear-gradient(180deg,rgba(11,11,12,.3)_0%,rgba(11,11,12,0)_24%,rgba(11,11,12,0)_46%,rgba(11,11,12,.6)_80%,rgba(11,11,12,.92)_100%)] transition-opacity duration-500 group-hover:opacity-70" />
+
+      <motion.div style={{ opacity: labelOpacity }} className="absolute bottom-4 left-4 z-20 pr-4">
+        <span aria-hidden className="block h-px w-5 bg-gold/70" />
+        <p className="mt-2 text-[13px] font-semibold tracking-[0.01em] [text-shadow:0_1px_12px_rgba(11,11,12,.8)]">
+          {category.label}
+        </p>
+        <p className="mt-1 text-[10.5px] leading-snug text-paper/70 [text-shadow:0_1px_10px_rgba(11,11,12,.8)]">
+          {category.blurb}
+        </p>
       </motion.div>
     </motion.div>
   );
@@ -153,7 +187,7 @@ export default function CoverflowScroller() {
       }
       // Tapping the centred card of a deck that is still turning shouldn't throw
       // you off the page — the first tap just parks it, the second opens it.
-      if (downSettled.current) router.push(CATEGORIES[logical].href);
+      if (downSettled.current) router.push(STRIP[logical].href);
       else api.current?.park();
     },
     [router],
@@ -178,8 +212,7 @@ export default function CoverflowScroller() {
       targetP: null as number | null,
       wantAuto: !prefersReduced,
     };
-    const drag = { active: false, moved: false, startX: 0, startP: 0, lastX: 0, lastT: 0, v: 0 };
-    let shown = -1;
+    const drag = { active: false, startX: 0, startP: 0, lastX: 0, lastT: 0, v: 0 };
     let wasPlaying = st.wantAuto;
 
     const syncPlaying = (on: boolean) => {
@@ -194,15 +227,6 @@ export default function CoverflowScroller() {
 
     /** Is the deck currently moving on its own? */
     const isRunning = () => wasPlaying;
-
-    const hold = () => {
-      if (drag.active) return;
-      st.mode = "stopped";
-      st.v = 0;
-      st.targetP = null;
-      syncPlaying(false);
-    };
-
 
     const render = () => {
       const { cardW, step, boxW, PERIOD } = M.current;
@@ -219,9 +243,16 @@ export default function CoverflowScroller() {
       // phone one card is wider than half the screen, which would leave the
       // neighbours with no gradient at all — so never let it drop below a step.
       const half = Math.max(boxW / 2, step * 1.2);
-      let best = 0;
+      // Only cards the viewport can reach need a focus value written; the rest are
+      // parked far off-screen where nothing reads it. `pr` is folded into one
+      // period first, so this window slides continuously and never jumps at the
+      // wrap — and since it reaches a full falloff radius past each edge, a card
+      // is always fresh before it comes into view, so nothing pops in.
+      const lo = Math.max(0, Math.floor((centre - cardW - half) / step));
+      const hi = Math.min(TOTAL - 1, Math.ceil((centre + cardW + half) / step));
+      let best = lo;
       let bestD = Infinity;
-      for (let i = 0; i < TOTAL; i++) {
+      for (let i = lo; i <= hi; i++) {
         // Distance is measured from the card's CENTRE, not its leading edge.
         const d = Math.abs(i * step + cardW / 2 - centre);
         if (d < bestD) { bestD = d; best = i; }
@@ -232,9 +263,6 @@ export default function CoverflowScroller() {
       // `render` scans every copy, so the centre index is recorded here rather
       // than recomputed elsewhere — two scans can disagree near a copy boundary.
       nearest.current = { index: best, logical: n, d: bestD };
-      if (n !== shown) {
-        shown = n;
-      }
     };
 
     /** Which logical card is nearest the centre right now (0..N-1). */
@@ -321,7 +349,6 @@ export default function CoverflowScroller() {
     const onDown = (e: PointerEvent) => {
       if (e.pointerType === "mouse" && e.button !== 0) return;
       drag.active = true;
-      drag.moved = false;
       moved.current = false;
       drag.startX = e.clientX;
       drag.startP = st.p;
@@ -338,7 +365,7 @@ export default function CoverflowScroller() {
     const onMove = (e: PointerEvent) => {
       if (!drag.active) return;
       const dx = e.clientX - drag.startX;
-      if (Math.abs(dx) > 4) { drag.moved = true; moved.current = true; }
+      if (Math.abs(dx) > 4) { moved.current = true; }
       const dt = Math.max(e.timeStamp - drag.lastT, 1);
       drag.v = -((e.clientX - drag.lastX) / dt) * 1000;
       drag.lastX = e.clientX;
@@ -414,13 +441,13 @@ export default function CoverflowScroller() {
       <div className="relative">
         <div
           ref={boxRef}
-          className="relative touch-pan-y overflow-hidden py-2 [--cf-w:min(60vw,240px)] md:[--cf-w:280px]"
+          className="relative touch-pan-y overflow-hidden py-2 [--cf-w:min(50vw,200px)] md:[--cf-w:300px]"
         >
           {/* Hidden until the first rAF applies the transform, otherwise the
               untransformed track flashes at translate(0) for one frame. */}
-          <div ref={trackRef} style={{ opacity: 0 }} className="flex items-start gap-4 will-change-transform">
+          <div ref={trackRef} style={{ opacity: 0 }} className="flex items-start gap-3 will-change-transform md:gap-4">
             {Array.from({ length: COPIES }, (_, copy) =>
-              CATEGORIES.map((c, i) => (
+              STRIP.map((c, i) => (
                 <Card
                   key={`${copy}-${c.id}`}
                   category={c}
@@ -432,6 +459,18 @@ export default function CoverflowScroller() {
               )),
             )}
           </div>
+
+          {/* Both ends dissolve into the page, so cards arrive and leave as if the
+              strip goes on past the frame instead of stopping dead at it. Scaled to
+              the viewport and capped, so a phone keeps most of its width for cards. */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-y-0 left-0 z-10 w-[13vw] max-w-32 bg-[linear-gradient(90deg,var(--color-bg)_0%,rgba(11,11,12,0)_100%)]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-y-0 right-0 z-10 w-[13vw] max-w-32 bg-[linear-gradient(270deg,var(--color-bg)_0%,rgba(11,11,12,0)_100%)]"
+          />
         </div>
 
         {/* Desktop arrows. Touch users swipe. */}
@@ -439,17 +478,21 @@ export default function CoverflowScroller() {
           type="button"
           aria-label="Previous"
           onClick={() => api.current?.step(-1)}
-          className="absolute left-6 top-1/2 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-bg/70 backdrop-blur transition-colors hover:border-gold md:flex"
+          className="absolute left-6 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-bg/60 text-paper/70 backdrop-blur-sm transition-colors hover:border-gold/60 hover:text-gold md:flex"
         >
-          ←
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="h-[18px] w-[18px]" aria-hidden>
+            <path d="M15 5 8 12l7 7" />
+          </svg>
         </button>
         <button
           type="button"
           aria-label="Next"
           onClick={() => api.current?.step(1)}
-          className="absolute right-6 top-1/2 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-bg/70 backdrop-blur transition-colors hover:border-gold md:flex"
+          className="absolute right-6 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-bg/60 text-paper/70 backdrop-blur-sm transition-colors hover:border-gold/60 hover:text-gold md:flex"
         >
-          →
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="h-[18px] w-[18px]" aria-hidden>
+            <path d="m9 5 7 7-7 7" />
+          </svg>
         </button>
       </div>
     </section>

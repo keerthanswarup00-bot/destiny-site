@@ -18,6 +18,11 @@ const PILLAR_OF: Record<string, CategoryId> = {
   "car-delivery": "celebrations",
   conferences: "corporate",
   product: "corporate",
+  fashion: "corporate",
+  commercial: "corporate",
+  // Films is the one that isn't a clean fit: Destiny cuts most of them for the
+  // wedding and event days, so it lands on the pillar its footage comes from.
+  films: "weddings",
 };
 
 /** The pillars, carrying over label, blurb, tone and image from CATEGORIES so a

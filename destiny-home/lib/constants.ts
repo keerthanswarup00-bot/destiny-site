@@ -62,21 +62,83 @@ export interface Category {
   label: string;
   blurb: string;
   href: string;
+  /** Real photograph, under /media. Undefined = nothing to show but a placeholder. */
   image?: string;
+  /**
+   * Turns in the home coverflow strip. The archive keeps every category; the strip
+   * only shows the ones Destiny has actually shot, because a moving wall of real
+   * photography is the whole point of it — a card without a frame has nothing to say.
+   * Featured entries come first, in strip order.
+   */
+  featured?: boolean;
   tone: Tone;
 }
 
 export const CATEGORIES: Category[] = [
-  { id: "weddings", label: "Weddings", blurb: "Full-day & multi-event", href: "/work?cat=weddings", tone: "gold" },
+  // ---- The coverflow strip, in the order it turns ----
+  {
+    id: "weddings",
+    label: "Weddings",
+    blurb: "Full-day & multi-event",
+    href: "/work?cat=weddings",
+    image: "/media/categories/weddings.jpg",
+    featured: true,
+    tone: "gold",
+  },
+  {
+    id: "films",
+    label: "Cinematic Films",
+    blurb: "Shot & cut in-house",
+    href: "/work?cat=films",
+    image: "/media/categories/films.jpg",
+    featured: true,
+    tone: "indigo",
+  },
+  {
+    id: "celebrations",
+    label: "Events & Celebrations",
+    blurb: "Milestones, openings & live nights",
+    href: "/work?cat=celebrations",
+    image: "/media/categories/events.jpg",
+    featured: true,
+    tone: "teal",
+  },
+  {
+    id: "fashion",
+    label: "Fashion",
+    blurb: "Campaigns & lookbooks",
+    href: "/work?cat=fashion",
+    image: "/media/categories/fashion.jpg",
+    featured: true,
+    tone: "plum",
+  },
+  {
+    id: "product",
+    label: "Product",
+    blurb: "Studio & on-location",
+    href: "/work?cat=product",
+    image: "/media/categories/product.jpg",
+    featured: true,
+    tone: "steel",
+  },
+  {
+    id: "commercial",
+    label: "Commercial",
+    blurb: "Ad films & brand spots",
+    href: "/work?cat=commercial",
+    image: "/media/categories/commercial.jpg",
+    featured: true,
+    tone: "ember",
+  },
+
+  // ---- Archive-only: real services Destiny covers, but with no frame to show yet ----
   { id: "pre-wedding", label: "Pre Wedding", blurb: "Engagement & story shoots", href: "/work?cat=pre-wedding", tone: "plum" },
   { id: "corporate", label: "Corporate & Brand", blurb: "Launches, offsites, VIP events", href: "/work?cat=corporate", tone: "steel" },
   { id: "conferences", label: "Conferences", blurb: "Conclaves & summits", href: "/work?cat=conferences", tone: "indigo" },
-  { id: "celebrations", label: "Events & Celebrations", blurb: "Milestones, openings & live nights", href: "/work?cat=celebrations", tone: "teal" },
   { id: "birthday", label: "Birthday", blurb: "Candles, cake & the loud room", href: "/work?cat=birthday", tone: "ember" },
   { id: "naming-ceremonies", label: "Naming Ceremonies", blurb: "Baby showers & cradles", href: "/work?cat=naming-ceremonies", tone: "sand" },
   { id: "inauguration", label: "Inauguration", blurb: "Ribbons, crowds & speeches", href: "/work?cat=inauguration", tone: "olive" },
   { id: "concerts", label: "Concerts & Live Events", blurb: "Multi-cam & stage coverage", href: "/work?cat=concerts", tone: "plum" },
-  { id: "product", label: "Product & Commercial", blurb: "Studio & on-location", href: "/work?cat=product", tone: "steel" },
   { id: "car-delivery", label: "Car Delivery", blurb: "The moment it rolls out", href: "/work?cat=car-delivery", tone: "gold" },
 ];
 
