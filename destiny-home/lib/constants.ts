@@ -3,7 +3,7 @@
 export type Tone = "gold" | "steel" | "plum" | "teal" | "ember" | "olive" | "indigo" | "sand";
 
 export const SITE = {
-  name: "Destiny",
+  name: "Destiny Events and Photography",
   tagline: "Events + Photography",
   whatsapp: "919108727795",
   email: "destinyeventsandphotography@gmail.com",
