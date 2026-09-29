@@ -6,14 +6,15 @@ export interface Milestone {
   tag: string;
   title: string;
   body: string;
-  image?: string; // /assets/studio/1972.jpg — no image = labeled placeholder
+  image?: string; // /media/about/1972.jpg — no image = labeled placeholder
   tone: Tone;
   /** Tells you which photo belongs here while it is still a placeholder. */
   mediaHint: string;
 }
 
 // TODO(owner): replace "Press years" / "Studio years" with exact years once confirmed.
-// Facts come from swaroop-studios.vercel.app; 2024 is the Destiny launch year.
+// Facts come from swaroop-studios.vercel.app; 2024 is the Destiny launch year. These eras are the
+// spine of the /about page — the timeline section renders them in order.
 export const MILESTONES: Milestone[] = [
   {
     id: "1972",

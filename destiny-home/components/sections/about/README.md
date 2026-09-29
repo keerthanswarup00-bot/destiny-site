@@ -1,15 +1,15 @@
-# Destiny — Studio page (add-on for destiny-home + destiny-work)
+# Destiny — About page (formerly the Studio page)
 
-Verified: strict typecheck, `next build`, and `/studio` server-renders (200) with all four eras. Not yet checked: how the scroll feels in a real browser or on a phone. Test on your phone first.
+Verified: strict typecheck, `next build`, and `/about` server-renders (200) with all four eras. Not yet checked: how the scroll feels in a real browser or on a phone. Test on your phone first.
 
-## Add to your repo (no new packages)
+## Where it lives
 ```
-app/studio/page.tsx
-components/sections/studio/StudioTimeline.tsx
-components/sections/studio/StudioCrew.tsx
-lib/studio.ts
+app/about/page.tsx
+components/sections/about/AboutTimeline.tsx
+components/sections/about/AboutCrew.tsx
+lib/about.ts
 ```
-Nav already points to /studio (from the Work-page update).
+This replaced `/studio`, which was retired in favour of `/about`. The section components are reused as-is apart from the rename; the timeline's `aria-label` and screen-reader `<h1>` now say "Our history" / "About" instead of "Studio".
 
 ## The effect ("the film develops")
 - Sticky full-screen stage, 100svh of scrolling per era.
@@ -19,10 +19,10 @@ Nav already points to /studio (from the Work-page update).
 - A gold timeline line fills on the left, with a dot per era.
 - Reduced-motion users get a static stacked version.
 
-## What you need to fill in (lib/studio.ts)
+## What you need to fill in (lib/about.ts)
 1. **Real years** for "Press years" and "Studio years". Only 1972 and 2024 are confirmed, so the middle two are labelled by era instead of guessed. Change `tag` to a year when you know it.
 2. **Photos.** Set `image` on each milestone. Ideal: scans of the real 1972 studio and press-era work (the grain + B&W treatment suits old prints), and a strong wide colour frame for 2024. Each placeholder's label says which photo belongs there.
-3. **Crew photo** in `StudioCrew.tsx` (real people working, not posed).
+3. **Crew photo** in `AboutCrew.tsx` (real people working, not posed).
 4. Check the wording of each era's copy. It is based on the Swaroop Studios site, so adjust it if a detail isn't quite right.
 
 ## Notes

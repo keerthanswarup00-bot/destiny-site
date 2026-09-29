@@ -1,7 +1,6 @@
 "use client";
 
 import { useId, useMemo, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
 import { EVENT_TYPES, CONTACT, buildEnquiryMessage, whatsappSendUrl } from "@/lib/contact";
 
 const inputCls =
@@ -20,17 +19,16 @@ function Field({ label, optional, children }: { label: string; optional?: boolea
 }
 
 /**
- * Collects the enquiry, shows exactly what will be sent, then hands off to WhatsApp.
+ * Collects the enquiry, then hands off to WhatsApp.
  *
  * `noValidate` is deliberate. The browser's own bubbles fire on submit and stop the event before
  * `onSubmit` runs, so an empty form would never reach the code that sets `touched` — the person
  * would get a native tooltip for a blank form and the designed error for a half-filled one.
  * Turning native validation off makes this component's message the only one that appears.
- * Nothing is sent anywhere until the person taps "Send via WhatsApp" — the preview is the trust move:
- * no one is asked to submit a form into a black box.
+ * Nothing is sent anywhere until the person taps "Send via WhatsApp", and the note under the button
+ * says so in as many words.
  */
 export default function EnquiryForm() {
-  const reduce = useReducedMotion();
   const formId = useId();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -113,21 +111,6 @@ export default function EnquiryForm() {
         <Field label="Anything else" optional>
           <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} className={`${inputCls} resize-none`} placeholder="Guest count, venue, anything that helps us plan" />
         </Field>
-      </div>
-
-      {/* Transparency: exactly what gets sent, before it's sent. The text changes on every
-          keystroke, so it is a live region — but a polite one, because announcing the whole
-          message each time would talk over the person still typing their phone number. */}
-      <div className="md:col-span-2">
-        <p className={labelCls}>This is what we'll receive on WhatsApp</p>
-        <motion.pre
-          animate={reduce ? undefined : { opacity: 1 }}
-          aria-live="polite"
-          aria-atomic="true"
-          className="whitespace-pre-wrap rounded-[3px] border border-line bg-bg2 p-4 font-body text-[13px] leading-relaxed text-mute"
-        >
-          {message}
-        </motion.pre>
       </div>
 
       <div className="md:col-span-2">

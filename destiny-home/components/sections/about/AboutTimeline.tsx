@@ -5,7 +5,7 @@ import {
   motion, useMotionTemplate, useMotionValueEvent, useReducedMotion, useScroll, useTransform, type MotionValue,
 } from "framer-motion";
 import MediaBlock from "@/components/ui/MediaBlock";
-import { MILESTONES, type Milestone } from "@/lib/studio";
+import { MILESTONES, type Milestone } from "@/lib/about";
 
 const N = MILESTONES.length;
 
@@ -68,7 +68,7 @@ function SceneText({ i, progress }: { i: number; progress: MotionValue<number> }
   );
 }
 
-export default function StudioTimeline() {
+export default function AboutTimeline() {
   const ref = useRef<HTMLElement>(null);
   const reduce = useReducedMotion();
   const [active, setActive] = useState(0);
@@ -86,8 +86,8 @@ export default function StudioTimeline() {
 
   if (reduce) {
     return (
-      <section aria-label="Studio history">
-        <h1 className="sr-only">Studio: Swaroop Studios since 1972, and Destiny from 2024</h1>
+      <section aria-label="Our history">
+        <h1 className="sr-only">About: Swaroop Studios since 1972, and Destiny from 2024</h1>
         {MILESTONES.map((m) => (
           <div key={m.id} className="relative min-h-[70svh] overflow-hidden border-b border-line">
             <MediaBlock src={m.image} alt={m.title} label={m.mediaHint} tone={m.tone} className="absolute inset-0" />
@@ -102,8 +102,8 @@ export default function StudioTimeline() {
   }
 
   return (
-    <section ref={ref} aria-label="Studio history" style={{ height: `${N * 100}svh` }} className="relative">
-      <h1 className="sr-only">Studio: Swaroop Studios since 1972, and Destiny from 2024</h1>
+    <section ref={ref} aria-label="Our history" style={{ height: `${N * 100}svh` }} className="relative">
+      <h1 className="sr-only">About: Swaroop Studios since 1972, and Destiny from 2024</h1>
       <div className="sticky top-0 h-[100svh] overflow-hidden bg-bg">
         <motion.div style={{ filter }} className="absolute inset-0">
           {MILESTONES.map((m, i) => (

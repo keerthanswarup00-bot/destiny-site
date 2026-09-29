@@ -17,8 +17,7 @@ export function whatsappUrl(message?: string) {
 
 export const NAV_LINKS = [
   { label: "Work", href: "/work" },
-  { label: "Films", href: "/films" },
-  { label: "Studio", href: "/studio" },
+  { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
 ] as const;
 
@@ -83,7 +82,7 @@ export const ABOUT = {
 export const HERITAGE = {
   year: "1972",
   text: "Destiny carries forward Swaroop Studios — documenting weddings, press and portraits since 1972. The same care for people and moments, told for a new generation.",
-  href: "/studio",
+  href: "/about",
 };
 
 export interface Testimonial {

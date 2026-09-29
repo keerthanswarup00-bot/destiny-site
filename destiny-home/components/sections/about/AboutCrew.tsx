@@ -2,9 +2,9 @@ import Container from "@/components/ui/Container";
 import MediaBlock from "@/components/ui/MediaBlock";
 import Reveal from "@/components/ui/Reveal";
 import SectionHead from "@/components/ui/SectionHead";
-import { CREW } from "@/lib/studio";
+import { CREW } from "@/lib/about";
 
-export default function StudioCrew() {
+export default function AboutCrew() {
   return (
     <section aria-labelledby="crew" className="border-t border-line py-11 md:py-[70px]">
       <Container>

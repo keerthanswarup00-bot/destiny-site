@@ -3,7 +3,7 @@ import Container from "@/components/ui/Container";
 import Reveal from "@/components/ui/Reveal";
 import { HERITAGE } from "@/lib/constants";
 
-/** Small trust strip. The full timeline belongs on /studio, not here. */
+/** Small trust strip. The full timeline belongs on /about, not here. */
 export default function HeritageStrip() {
   return (
     <section aria-label="Our heritage" className="border-t border-line py-11 md:py-[70px]">
