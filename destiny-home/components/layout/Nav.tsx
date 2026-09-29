@@ -3,11 +3,13 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { NAV_LINKS, SITE, CHAT_CTA } from "@/lib/constants";
+import { NAV_LINKS, SITE, whatsappUrl } from "@/lib/constants";
 
 /** Logo left · menu centre · CTA right. Menu collapses to a slide-in panel on mobile. */
 export default function Nav() {
   const [open, setOpen] = useState(false);
+
+  const whatsappHref = whatsappUrl("Hi Destiny, I'd like to enquire about an event.");
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -40,12 +42,13 @@ export default function Nav() {
           </nav>
 
           <div className="col-start-3 flex items-center gap-4 justify-self-end md:col-start-auto">
-            <Link
-              href={CHAT_CTA.href}
+            <a
+              href={whatsappHref}
+              aria-label="Let's talk on WhatsApp"
               className="whitespace-nowrap border border-gold px-3.5 py-2 text-xs font-semibold text-gold transition-colors hover:bg-gold hover:text-bg"
             >
-              {CHAT_CTA.button}
-            </Link>
+              Let&apos;s talk →
+            </a>
             <button
               type="button"
               aria-label={open ? "Close menu" : "Open menu"}
