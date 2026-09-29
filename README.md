@@ -66,7 +66,7 @@ Two things that are easy to break:
 
 ## Media
 
-`destiny-home/public/media/` — **178MB across 6 videos plus posters.** These are
+`destiny-home/public/media/` — **~196MB across 9 videos plus posters.** These are
 committed on purpose: the app needs them present to build and deploy, and a clone
 without them ships broken video. `git-lfs` is not installed; the largest single file
 is 61MB, under GitHub's 100MB per-file hard limit.
@@ -79,6 +79,15 @@ is 61MB, under GitHub's 100MB per-file hard limit.
 | `wedding-film-720.mp4` | 18M | Home, film block, below 900px |
 | `reel-3.mp4` | 17M | Home, reel carousel |
 | `reel-2.mp4` | 5.5M | Home, reel carousel |
+| `reel-5.mp4` | 6.7M | Home, reel carousel |
+| `reel-6.mp4` | 6.6M | Home, reel carousel |
+| `reel-4.mp4` | 5.3M | Home, reel carousel |
+
+`reel-4`–`reel-6` are the vertical clips supplied in
+`~/Downloads/website /new reel video`, byte-for-byte copies renamed to the project's
+`reel-N` convention. They are 720x1280 where `reel-1`–`reel-3` are 1080x1920, and
+already faststart-encoded, so they were moved rather than re-encoded. Posters are
+frame 0 of each file, so the still-to-video handover is invisible.
 
 All are H.264 with `+faststart` and AAC audio. The originals were transcoded, not
 copied; re-encode commands are in the work README.

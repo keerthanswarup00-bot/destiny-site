@@ -116,6 +116,9 @@ export const REELS: Reel[] = [
   { id: "reel-1", src: "/media/reel-1.mp4", poster: "/media/reel-1-poster.jpg", title: "Reel 01" },
   { id: "reel-2", src: "/media/reel-2.mp4", poster: "/media/reel-2-poster.jpg", title: "Reel 02" },
   { id: "reel-3", src: "/media/reel-3.mp4", poster: "/media/reel-3-poster.jpg", title: "Reel 03" },
+  { id: "reel-4", src: "/media/reel-4.mp4", poster: "/media/reel-4-poster.jpg", title: "Reel 04" },
+  { id: "reel-5", src: "/media/reel-5.mp4", poster: "/media/reel-5-poster.jpg", title: "Reel 05" },
+  { id: "reel-6", src: "/media/reel-6.mp4", poster: "/media/reel-6-poster.jpg", title: "Reel 06" },
 ];
 
 export const REEL_SECTION = {
