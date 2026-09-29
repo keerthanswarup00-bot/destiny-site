@@ -13,10 +13,10 @@ import { CATEGORIES, type Category } from "@/lib/constants";
 type StripCategory = Category & { image: string };
 
 /** Only the categories Destiny has a real frame for. The archive is a catalogue;
- *  this is a photography wall, so an unshot category never turns in it. The cast
- *  narrows `image` to string — the filter is the proof, so no card can render
- *  without a source. */
-const STRIP = CATEGORIES.filter((c) => c.featured && c.image) as StripCategory[];
+ *  this is a photography wall, so an unshot category never turns in it. The predicate
+ *  narrows `image` to string rather than casting for it, so the filter really is the
+ *  proof and no card can render without a source. */
+const STRIP = CATEGORIES.filter((c): c is StripCategory => c.featured === true && !!c.image);
 const N = STRIP.length;
 /** Three copies of the list. Nothing scrolls — the track is translated — so one copy
  *  either side of the centre covers the viewport at both ends of the loop. */
