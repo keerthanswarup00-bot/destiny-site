@@ -69,7 +69,6 @@ const organizationSchema = {
   name: "Destiny Events and Photography",
   alternateName: ["Destiny", "Destiny Events + Photography", "Destiny Events & Photography"],
   url: SITE_URL,
-  logo: SITE_URL + "/media/logo.png",
   email: "destinyeventsandphotography@gmail.com",
   sameAs: ["https://www.instagram.com/destinyeventsandphotography/"],
   description: "Destiny Events and Photography is a photography and filmmaking studio for weddings, events, corporate and brand productions.",
