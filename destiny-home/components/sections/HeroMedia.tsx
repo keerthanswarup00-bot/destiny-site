@@ -51,6 +51,9 @@ export default function HeroMedia() {
 
       <div className="absolute inset-x-0 bottom-[clamp(30px,7vh,64px)] z-20">
         <div className="mx-auto w-full max-w-[1320px] px-5 md:px-12">
+          <p className="mb-3 text-[10px] font-medium uppercase tracking-[0.28em] text-paper/80 md:text-xs">
+            Destiny Events and Photography
+          </p>
           <motion.h1
             className="max-w-[20ch] font-display text-[clamp(26px,7vw,46px)] font-normal italic leading-[1.18] md:max-w-[26ch]"
             initial={reduce ? "show" : "hidden"}
