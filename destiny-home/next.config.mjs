@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  assetPrefix: "https://destiny-site-omega.vercel.app",
   images: {
     loader: "custom",
     loaderFile: "./lib/image-loader.ts",
