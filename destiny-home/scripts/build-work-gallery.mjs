@@ -40,10 +40,6 @@ const WIDTHS = [400, 800, 1200, 1600];
 /** 82 sits in the brief's 80–85 band: visually clean for photography, a long way under JPEG. */
 const QUALITY = 82;
 
-/** The LQIP is a placeholder, not the picture — it only needs to read as the right shape. */
-const LQIP_WIDTH = 16;
-const LQIP_QUALITY = 30;
-
 const EXTS = new Set([".jpg", ".jpeg", ".png"]);
 
 /**
@@ -95,13 +91,6 @@ async function build() {
         bytes += buf.length;
       }
 
-      const lqip = await sharp(src, { failOn: "none" })
-        .rotate()
-        .resize({ width: LQIP_WIDTH, withoutEnlargement: true })
-        .toColorspace("srgb")
-        .webp({ quality: LQIP_QUALITY })
-        .toBuffer();
-
       // The widest rung actually written is the fallback `src` and the size the browser falls
       // back to when it has no srcset support, so it must be the largest — never the smallest.
       const widest = Math.max(...WIDTHS.filter((s) => s <= w));
@@ -114,7 +103,6 @@ async function build() {
         srcSet: srcset(base, url, w),
         width: w,
         height: h,
-        lqip: `data:image/webp;base64,${lqip.toString("base64")}`,
         source: name,
       });
       report.push({ base, name, w, h, ratio: w / h, bytes });
@@ -125,7 +113,7 @@ async function build() {
   // structural assignment to GalleryImage[] in lib/work.ts fails — which is the point of
   // doing a real assignment there instead of a cast.
   const json = JSON.stringify(
-    items.map(({ lqip: _lqip, source: _source, ...rest }) => rest),
+    items.map(({ source: _source, ...rest }) => rest),
     null,
     2,
   ).replace(/"category": "([^"]+)"/g, '"category": "$1" as const');
@@ -144,20 +132,8 @@ async function build() {
  * than a cast — so this shape and the type cannot drift apart unnoticed.
  */
 export const GALLERY_IMAGES = ${json};
-`;
 
-  const lqipBody = `/**
- * GENERATED FILE — do not edit by hand. Regenerate with: npm run build:work-gallery
- * Inline blur-up placeholders, keyed by image id. Split out from the manifest so the array
- * stays readable and the base64 blobs don't drown the dimensions.
- */
-export const LQIP: Record<string, string> = ${JSON.stringify(
-    Object.fromEntries(items.map((i) => [i.id, i.lqip])),
-    null,
-    2,
-  )};
-
-/** Original filenames, kept for provenance so a photo can be traced back to its source. */
+/** Original filenames, keyed by image id, so a photo can be traced back to its source. */
 export const SOURCE_NAMES: Record<string, string> = ${JSON.stringify(
     Object.fromEntries(items.map((i) => [i.id, i.source])),
     null,
@@ -165,8 +141,8 @@ export const SOURCE_NAMES: Record<string, string> = ${JSON.stringify(
   )};
 `;
 
+
   await writeFile(path.join(ROOT, "lib/work-gallery.generated.ts"), body);
-  await writeFile(path.join(ROOT, "lib/work-gallery-lqip.generated.ts"), lqipBody);
 
   // ---- audit -------------------------------------------------------------
   const totalBytes = report.reduce((a, r) => a + r.bytes, 0);

@@ -10,9 +10,8 @@ components/sections/work/WorkGallery     sticky filter chips + masonry gallery
 components/sections/work/WorkLightbox    full-screen viewer
 components/ui/ResponsivePhoto            <img> + pre-generated WebP ladder
 lib/work.ts                              PILLARS, CHAPTER_COPY, WORK_ITEMS, WORK_FILM
-lib/work-gallery.generated.ts            GENERATED: id, category, src, srcSet, width, height
-lib/work-gallery-lqip.generated.ts       GENERATED: 16px WebP data URIs + source filenames
-scripts/build-work-gallery.mjs           the pipeline that produced both of the above
+lib/work-gallery.generated.ts            GENERATED: id, category, src, srcSet, width, height, SOURCE_NAMES
+scripts/build-work-gallery.mjs           the pipeline that produced the above
 ```
 
 No new npm packages — uses `framer-motion` and existing components. `sharp` is
@@ -36,12 +35,23 @@ no measuring in JS, no reflow on resize, and no row grid to punch holes in.
 `object-cover` on the inner `<img>` cannot crop anything — container and image are the same
 shape, so it only ever fills.
 
-**Where the pixels come from.** The originals are camera JPEGs up to 9504px wide, so they
-are never committed. `npm run build:work-gallery` converts each to WebP at 400/800/1200/1600
+**Where the pixels come from.** The originals are camera JPEGs up to 9504px wide, so they are
+never committed. `npm run build:work-gallery` converts each to WebP at 400/800/1200/1600
 (widths capped at the source's own width, so a small photo is never upscaled), strips
-EXIF/IPTC/XMP, converts to sRGB, and writes a 16px WebP data URI per image for the blur-up.
-Grid columns are at most 300px CSS wide, so the grid only ever requests the 400w or 800w
-rung; 1200/1600 exist for the lightbox.
+EXIF/IPTC/XMP and converts to sRGB. Grid columns are at most 300px CSS wide, so the grid only
+ever requests the 400w or 800w rung; 1200/1600 exist for the lightbox.
+
+**There is no blur-up placeholder, and there should not be.** There was one: a 16px WebP behind
+`blur-xl`, inlined as a base64 `background-image`. It was wrong twice over. The placeholder was
+absolutely positioned while the `<img>` was static, and a positioned box paints after a static one
+— so it covered the photograph from the first frame rather than sitting behind it. And nothing
+dismissed it: there was no `onLoad`, so every frame stayed blurred permanently. A blur-up also
+makes every image flash into a blurred state by design, which is the thing to avoid on a
+photography portfolio. It cost 10KB of render-blocking inline base64 in the HTML plus 16KB of
+base64 in the client bundle for no benefit. Layout stability does not need a placeholder here —
+the real `width`/`height` reserve the box at the exact ratio first, so the page never shifts. If
+you want a pre-load treatment, it has to be a *solid* dominant colour behind the frame, never a
+blurred image, and it must be removed on `load`.
 
 **`ResponsivePhoto` is a plain `<img>`, not `next/image`.** Next removes `srcSet` from its
 own props on purpose — it wants to generate the ladder with its loader — so there is no way

@@ -4,10 +4,10 @@ import { useCallback, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import ResponsivePhoto from "@/components/ui/ResponsivePhoto";
 import { CATEGORIES } from "@/lib/constants";
-import { ratioOf, type WorkItem } from "@/lib/work";
+import { ratioOf, type GalleryImage } from "@/lib/work";
 
 interface Props {
-  items: readonly WorkItem[];
+  items: readonly GalleryImage[];
   openId: string | null;
   onChange: (id: string | null) => void;
 }
@@ -84,7 +84,6 @@ export default function WorkLightbox({ items, openId, onChange }: Props) {
               alt={item.title}
               width={item.width}
               height={item.height}
-              lqip={item.lqip}
               eager
               className="h-full w-full object-contain"
             />

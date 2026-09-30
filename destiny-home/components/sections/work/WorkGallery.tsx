@@ -7,7 +7,7 @@ import ResponsivePhoto from "@/components/ui/ResponsivePhoto";
 import SectionHead from "@/components/ui/SectionHead";
 import {
   CATEGORY_COUNTS, PILLARS, imagesInCategory, ratioOf,
-  type CategoryId, type WorkItem,
+  type CategoryId, type GalleryImage,
 } from "@/lib/work";
 import WorkLightbox from "./WorkLightbox";
 
@@ -112,7 +112,7 @@ export default function WorkGallery({ filter, onFilter }: { filter: Filter; onFi
 function Frame({
   item, index, eager, reduce, ease, onOpen,
 }: {
-  item: WorkItem;
+  item: GalleryImage;
   index: number;
   eager: boolean;
   reduce: boolean;
@@ -144,7 +144,6 @@ function Frame({
             alt={item.title}
             width={item.width}
             height={item.height}
-            lqip={item.lqip}
             eager={eager}
             priority={index === 0}
             /* `contain`, not `cover`. The box is already the photo's exact ratio, so the two are

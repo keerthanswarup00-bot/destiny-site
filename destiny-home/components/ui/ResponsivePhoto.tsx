@@ -9,10 +9,12 @@
  * JPEGs (up to 9504px wide) into WebP at 400/800/1200/1600 on a fixed ladder, so the only thing
  * left is for the browser to pick a rung — which is exactly what srcSet and sizes are for.
  *
- * Every frame carries its true width and height, so the box is reserved at the real aspect ratio
- * before a byte of image data arrives and nothing shifts. Callers pair that with `object-contain`:
- * because the box already has the photo's own ratio the two are visually identical, but it means
- * an image can never be cropped to fit — not even by a subpixel if a box is ever a rounding off.
+ * There is deliberately no blur-up placeholder here. One existed, and it put a 16px WebP behind
+ * `blur-xl` so that it painted on top of the photograph (an absolutely-positioned element paints
+ * after a static one) and, having no `onLoad` to dismiss it, left every frame permanently blurred.
+ * Beyond that, a blur-up makes every image flash into a blurred state by design. Layout stability
+ * does not need it: every frame below carries its true width and height, so the box is already
+ * reserved at the real aspect ratio before a byte of image data arrives.
  */
 export default function ResponsivePhoto({
   src,
@@ -21,7 +23,6 @@ export default function ResponsivePhoto({
   alt,
   width,
   height,
-  lqip,
   eager = false,
   priority = false,
   className = "",
@@ -33,8 +34,6 @@ export default function ResponsivePhoto({
   /** Original pixel dimensions, used for the aspect-ratio box. */
   width: number;
   height: number;
-  /** 16px WebP data URI of the same frame, shown until the real one lands. */
-  lqip?: string;
   /** Skip lazy-loading. For the first screenful only — everything below stays lazy. */
   eager?: boolean;
   /** `fetchPriority="high"`. Reserved for the single LCP candidate. */
@@ -42,28 +41,18 @@ export default function ResponsivePhoto({
   className?: string;
 }) {
   return (
-    <>
-      {lqip && (
-        <div
-          aria-hidden
-          className="absolute inset-0 scale-110 bg-cover bg-center blur-xl"
-          style={{ backgroundImage: `url(${lqip})` }}
-        />
-      )}
-      {/* eslint-disable-next-line @next/next/no-img-element -- the responsive WebP ladder is
-          pre-generated; next/image takes srcSet out of its props and would re-encode it. */}
-      <img
-        src={src}
-        srcSet={srcSet}
-        sizes={sizes}
-        alt={alt}
-        width={width}
-        height={height}
-        loading={eager ? "eager" : "lazy"}
-        fetchPriority={priority ? "high" : "auto"}
-        decoding={eager ? "sync" : "async"}
-        className={className}
-      />
-    </>
+    // eslint-disable-next-line @next/next/no-img-element -- pre-generated WebP ladder; next/image owns srcSet.
+    <img
+      src={src}
+      srcSet={srcSet}
+      sizes={sizes}
+      alt={alt}
+      width={width}
+      height={height}
+      loading={eager ? "eager" : "lazy"}
+      fetchPriority={priority ? "high" : "auto"}
+      decoding={eager ? "sync" : "async"}
+      className={className}
+    />
   );
 }
