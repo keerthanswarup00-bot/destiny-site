@@ -743,6 +743,28 @@ export default function CinematicReelCarousel() {
           </div>
         </div>
 
+        {/* Desktop arrow navigation — matches the CoverflowScroller controls. */}
+        <button
+          type="button"
+          aria-label="Previous reel"
+          onClick={() => api.current?.step(-1)}
+          className="absolute left-6 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-bg/60 text-paper/70 backdrop-blur-sm transition-colors hover:border-gold/60 hover:text-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold md:flex"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="h-[18px] w-[18px]" aria-hidden="true">
+            <path d="M15 5 8 12l7 7" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          aria-label="Next reel"
+          onClick={() => api.current?.step(1)}
+          className="absolute right-6 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-bg/60 text-paper/70 backdrop-blur-sm transition-colors hover:border-gold/60 hover:text-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold md:flex"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="h-[18px] w-[18px]" aria-hidden="true">
+            <path d="m9 5 7 7-7 7" />
+          </svg>
+        </button>
+
         {/* Under the centre reel, out of the frame. */}
         <div className="mt-5 flex items-center justify-center gap-2.5">
           <button
