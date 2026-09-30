@@ -310,6 +310,13 @@ function ReelCard({
         className="absolute inset-0 h-full w-full bg-[#0B0B0C] object-cover"
         onPlay={() => onPlaying(true)}
         onPause={() => onPlaying(false)}
+        onCanPlay={() => {
+          const ready = videos.current[physical];
+          if (ready && isActive && inView && !held.current) {
+            ready.muted = sound.current;
+            attempt(ready);
+          }
+        }}
         onEnded={() => onEnded(physical)}
       />
     </motion.li>
@@ -380,18 +387,24 @@ export default function CinematicReelCarousel() {
   /** Hand the centre over to whichever card just landed there. */
   const take = (physical: number) => {
     if (centreCard.current === physical) return;
+
+    // Stop the old centre immediately so two reels can never compete for playback.
     const was = videos.current[centreCard.current] ?? null;
     if (was) {
       was.pause();
       rewind(was);
     }
+
+    // Make the newly selected reel the playback owner before React renders the new
+    // active state. Arrow navigation and swipes therefore use the same handoff.
     centreCard.current = physical;
     setCentre(physical);
 
     const v = videos.current[physical];
     if (!v) return;
+
     rewind(v);
-    v.muted = sound.current; // property, not attribute — the attribute alone won't unmute on iOS
+    v.muted = sound.current; // property, not attribute — required for iOS playback
     run(true);
   };
 
