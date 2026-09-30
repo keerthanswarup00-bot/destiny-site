@@ -14,8 +14,8 @@ export const ABOUT_HERO = {
   lines: ["Built on memories.", "Made for what comes next."],
   body:
     "A creative studio shaped by decades of stories, now making photographs, films and visual experiences for the moments that matter.",
-  image: "/media/hero.jpg",
-  alt: "A wedding couple at their ceremony",
+  image: "/media/about-hero.jpg",
+  alt: "A portrait from the Destiny studio archive",
 } as const;
 
 /**

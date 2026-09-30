@@ -28,7 +28,7 @@ export default function AboutHero() {
         <RevealImage
           src={ABOUT_HERO.image}
           alt={ABOUT_HERO.alt}
-          label="HERO — grand wedding couple, full-bleed image"
+          label="HERO — full-bleed portrait"
           tone="gold"
           priority
           sizes="100vw"
