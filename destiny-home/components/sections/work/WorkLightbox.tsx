@@ -2,19 +2,23 @@
 
 import { useCallback, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import MediaBlock from "@/components/ui/MediaBlock";
+import ResponsivePhoto from "@/components/ui/ResponsivePhoto";
 import { CATEGORIES } from "@/lib/constants";
-import type { Size, WorkItem } from "@/lib/work";
-
-const RATIO: Record<Size, number> = { s: 1, t: 0.7, w: 1.7 };
+import { ratioOf, type WorkItem } from "@/lib/work";
 
 interface Props {
-  items: WorkItem[];
+  items: readonly WorkItem[];
   openId: string | null;
   onChange: (id: string | null) => void;
 }
 
-/** Full-screen viewer. Shares a layoutId with the grid tile, so the frame expands out of the grid. */
+/** Full-screen viewer.
+ *
+ * The frame is sized from the photo's own ratio and bounded by the viewport, so a portrait opens
+ * as a portrait and a 3:2 opens as a landscape. The previous version looked the aspect up in a
+ * hand-written table of three fake ratios and pinned it on the element, which cropped every
+ * photograph that wasn't one of those three.
+ */
 export default function WorkLightbox({ items, openId, onChange }: Props) {
   const index = items.findIndex((i) => i.id === openId);
   const item = index >= 0 ? items[index] : null;
@@ -63,14 +67,28 @@ export default function WorkLightbox({ items, openId, onChange }: Props) {
             else if (info.offset.x > 60) go(-1);
           }}
         >
-          <motion.div
-            layoutId={`work-${item.id}`}
+          <div
             onClick={(e) => e.stopPropagation()}
-            style={{ width: `min(92vw, calc(74svh * ${RATIO[item.size]}))`, aspectRatio: RATIO[item.size] }}
+            /* One viewport term and one ratio: whichever is tighter wins, so the whole frame is
+               always visible and never needs cropping to fit. */
+            style={{
+              width: `min(92vw, calc(78svh * ${ratioOf(item)}))`,
+              aspectRatio: ratioOf(item),
+            }}
             className="relative overflow-hidden rounded-[3px]"
           >
-            <MediaBlock src={item.image} alt={item.title} label={item.title} tone={cat?.tone} sizes="92vw" className="h-full w-full" />
-          </motion.div>
+            <ResponsivePhoto
+              src={item.src}
+              srcSet={item.srcSet}
+              sizes="(min-width:1600px) 1600px, 92vw"
+              alt={item.title}
+              width={item.width}
+              height={item.height}
+              lqip={item.lqip}
+              eager
+              className="h-full w-full object-contain"
+            />
+          </div>
 
           <div className="text-center" onClick={(e) => e.stopPropagation()}>
             <p className="text-sm font-semibold">{item.title}</p>

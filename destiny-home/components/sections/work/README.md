@@ -6,12 +6,61 @@ Files:
 ```
 app/work/page.tsx                        route + metadata, resolves ?cat=
 components/sections/work/WorkExperience  top section + filter state
-components/sections/work/WorkGallery     sticky filter chips + bento grid
+components/sections/work/WorkGallery     sticky filter chips + masonry gallery
 components/sections/work/WorkLightbox    full-screen viewer
+components/ui/ResponsivePhoto            <img> + pre-generated WebP ladder
 lib/work.ts                              PILLARS, CHAPTER_COPY, WORK_ITEMS, WORK_FILM
+lib/work-gallery.generated.ts            GENERATED: id, category, src, srcSet, width, height
+lib/work-gallery-lqip.generated.ts       GENERATED: 16px WebP data URIs + source filenames
+scripts/build-work-gallery.mjs           the pipeline that produced both of the above
 ```
 
-No new npm packages — uses `framer-motion` and existing components.
+No new npm packages — uses `framer-motion` and existing components. `sharp` is
+already in the tree (a `next` transitive), and the build script is the only thing
+that needs it.
+
+## The gallery
+
+Masonry, and every photograph keeps its own aspect ratio. The previous version gave each
+frame a fixed row height (`auto-rows-[15vw]`) plus a hand-assigned span from a repeating
+`["w","s","t","s","s","w","s","t"]` pattern, then cropped to fit with `object-cover` — so
+a 2:3 portrait and a 3:2 landscape came out as the same card. That is gone, along with
+`Size` and the pattern.
+
+**Layout** is CSS multi-column: 2 columns, 3 from `md`, 4 from `lg`, with
+`break-inside-avoid` on each frame. The browser balances the columns natively, so there is
+no measuring in JS, no reflow on resize, and no row grid to punch holes in.
+
+**Each frame's box** is `aspect-ratio: <real w> / <real h>` from the manifest, set on the
+`li` before any image byte is requested. That is the whole no-CLS story, and it is also why
+`object-cover` on the inner `<img>` cannot crop anything — container and image are the same
+shape, so it only ever fills.
+
+**Where the pixels come from.** The originals are camera JPEGs up to 9504px wide, so they
+are never committed. `npm run build:work-gallery` converts each to WebP at 400/800/1200/1600
+(widths capped at the source's own width, so a small photo is never upscaled), strips
+EXIF/IPTC/XMP, converts to sRGB, and writes a 16px WebP data URI per image for the blur-up.
+Grid columns are at most 300px CSS wide, so the grid only ever requests the 400w or 800w
+rung; 1200/1600 exist for the lightbox.
+
+**`ResponsivePhoto` is a plain `<img>`, not `next/image`.** Next removes `srcSet` from its
+own props on purpose — it wants to generate the ladder with its loader — so there is no way
+to hand it rungs that are already built. The originals are JPEG; the delivered files are
+pre-optimised WebP, so Next's optimiser would be re-encoding work that is already done.
+
+Re-run after adding or changing photographs:
+```bash
+npm run build:work-gallery
+```
+
+### Categories
+
+`weddings` ← the `Wedding` source folder (31 photos), `pre-wedding` ← `portraits` (21).
+`celebrations` and `corporate` have **no source photographs yet**, so their chips render an
+empty state rather than a blank grid. The chips are kept so the missing categories stay
+visible; each shows its own count. Adding photos to those pillars is a matter of pointing
+the script at the folder and adding the mapping — no component change.
+
 
 ## Structure
 
