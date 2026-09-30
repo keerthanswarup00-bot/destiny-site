@@ -301,7 +301,6 @@ function ReelCard({
         // Decoding happens on one element at a time: the centre plays, its neighbours are
         // held at metadata, and the whole set is released again when the section is left.
         preload={inView ? (isActive ? "auto" : isNeighbour ? "metadata" : "none") : "none"}
-        loading="lazy"
         poster={reel.poster}
         muted
         playsInline
@@ -310,13 +309,6 @@ function ReelCard({
         className="absolute inset-0 h-full w-full bg-[#0B0B0C] object-cover"
         onPlay={() => onPlaying(true)}
         onPause={() => onPlaying(false)}
-        onCanPlay={() => {
-          const ready = videos.current[physical];
-          if (ready && isActive && inView && !held.current) {
-            ready.muted = sound.current;
-            attempt(ready);
-          }
-        }}
         onEnded={() => onEnded(physical)}
       />
     </motion.li>
