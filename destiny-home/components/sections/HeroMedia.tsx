@@ -17,7 +17,7 @@ export default function HeroMedia() {
   const reduce = useReducedMotion();
 
   return (
-    <section className="relative h-[100svh] min-h-[520px] w-full overflow-hidden">
+    <section className="relative h-[100svh] min-h-[520px] w-full overflow-hidden [&_button]:hidden">
       <motion.div
         className="absolute inset-0"
         initial={reduce ? false : { scale: 1.08 }}
