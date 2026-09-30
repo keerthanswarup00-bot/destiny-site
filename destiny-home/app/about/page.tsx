@@ -5,7 +5,6 @@ import AboutIntro from "@/components/sections/about/AboutIntro";
 import AboutAman from "@/components/sections/about/AboutAman";
 import AboutTeam from "@/components/sections/about/AboutTeam";
 import AboutWider from "@/components/sections/about/AboutWider";
-import AboutHistory from "@/components/sections/about/AboutHistory";
 import AboutLegacy from "@/components/sections/about/AboutLegacy";
 import AboutCta from "@/components/sections/about/AboutCta";
 import { AMAN } from "@/lib/about";
@@ -68,7 +67,6 @@ export default function AboutPage() {
       <AboutAman />
       <AboutTeam />
       <AboutWider />
-      <AboutHistory />
       <AboutLegacy />
       <AboutCta />
     </>
