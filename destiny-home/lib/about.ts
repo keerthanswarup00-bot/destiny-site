@@ -115,23 +115,6 @@ export const TEAM = {
   ],
 } as const;
 
-export const WIDER = {
-  title: "It started with weddings. It grew into everything around them.",
-  body:
-    "A wedding teaches you how a hundred people behave when something matters to them. That is the same skill a brand needs when it launches, a musician needs in a video, and a family needs at a birthday. The subject changes. The eye does not.",
-  fields: [
-    "Weddings",
-    "Events",
-    "Celebrations",
-    "Films",
-    "Music",
-    "Fashion",
-    "Products",
-    "Brands",
-    "Social media",
-  ],
-} as const;
-
 /** The father/son beat. Typographic on purpose — no 1972 photograph exists to show. */
 export const LEGACY = {
   title: "One legacy. A new language.",

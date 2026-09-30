@@ -4,7 +4,6 @@ import AboutHero from "@/components/sections/about/AboutHero";
 import AboutIntro from "@/components/sections/about/AboutIntro";
 import AboutAman from "@/components/sections/about/AboutAman";
 import AboutTeam from "@/components/sections/about/AboutTeam";
-import AboutWider from "@/components/sections/about/AboutWider";
 import AboutLegacy from "@/components/sections/about/AboutLegacy";
 import AboutCta from "@/components/sections/about/AboutCta";
 import { AMAN } from "@/lib/about";
@@ -66,7 +65,6 @@ export default function AboutPage() {
       <AboutIntro />
       <AboutAman />
       <AboutTeam />
-      <AboutWider />
       <AboutLegacy />
       <AboutCta />
     </>
