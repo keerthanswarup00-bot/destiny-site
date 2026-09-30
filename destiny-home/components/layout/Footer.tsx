@@ -7,7 +7,7 @@ export default function Footer() {
       <div className="mx-auto w-full max-w-[1320px] px-5 md:px-12">
         <div className="grid gap-10 md:grid-cols-[1.5fr_1fr_1fr] md:gap-16">
           <div className="max-w-md">
-            <div className="text-lg tracking-tight text-paper">{SITE.name}</div>
+            <div className="text-lg tracking-tight text-paper">{SITE.wordmark}</div>
             <div className="mt-1 text-[11px] uppercase tracking-[0.18em]">{SITE.tagline}</div>
             <p className="mt-5 max-w-sm leading-6">
               A Bengaluru-based creative studio documenting weddings, events and stories with
