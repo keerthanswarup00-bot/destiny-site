@@ -536,13 +536,16 @@ export default function CinematicReelCarousel() {
       if (!drag.active) return;
       const dx = e.clientX - drag.startX;
       const dt = Math.max(e.timeStamp - drag.lastT, 1);
-      drag.v = -((e.clientX - drag.lastX) / dt) * 1000; // px per second
+      // Keep the carousel under the finger: a left swipe must move the cards left,
+      // and a right swipe must move them right. The previous sign inversion made the
+      // carousel travel opposite to the gesture.
+      drag.v = ((e.clientX - drag.lastX) / dt) * 1000; // px per second
       drag.lastX = e.clientX;
       drag.lastT = e.timeStamp;
       // Cards are placed in units of the centre reel's width, so that is the drag's unit too.
       // Clamped to the loop window plus the one card a flick may overshoot, so the strip can
       // never be dragged off the end of the copies.
-      st.pos = clamp(drag.startPos - dx / M.base, FIRST - 1, FIRST + N - 1);
+      st.pos = clamp(drag.startPos + dx / M.base, FIRST - 1, FIRST + N - 1);
       start();
     };
 
