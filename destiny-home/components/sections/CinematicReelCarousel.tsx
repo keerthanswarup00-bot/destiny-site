@@ -700,7 +700,7 @@ export default function CinematicReelCarousel() {
         4/5 with object-cover keeps the framing, never distorts, and holds the section to ~80vh.
         The ratios are read back in JS, so this block is the only place the layout is defined.
       */}
-      <div className="mt-5 [--reel-a:0.42] [--reel-gap:0.03] [--reel-o:0.42] [--reel-w:min(68vw,34vh)] [--reel-win:1] [--reel-ar:1.7778] md:mt-7 md:[--reel-a:0.63] md:[--reel-gap:0.02] md:[--reel-o:0.46] md:[--reel-w:min(34vw,58vh)] md:[--reel-win:2] md:[--reel-ar:1.25]">
+      <div className="relative mt-5 [--reel-a:0.42] [--reel-gap:0.03] [--reel-o:0.42] [--reel-w:min(68vw,34vh)] [--reel-win:1] [--reel-ar:1.7778] md:mt-7 md:[--reel-a:0.63] md:[--reel-gap:0.02] md:[--reel-o:0.46] md:[--reel-w:min(34vw,58vh)] md:[--reel-win:2] md:[--reel-ar:1.25]">
         <div
           ref={boxRef}
           tabIndex={0}
