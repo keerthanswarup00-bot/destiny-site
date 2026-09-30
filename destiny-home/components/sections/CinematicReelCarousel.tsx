@@ -239,6 +239,17 @@ function ReelCard({
   register: (physical: number, el: HTMLVideoElement | null) => void;
 }) {
   const reduce = useReducedMotion();
+  const mobile = useRef(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const sync = () => {
+      mobile.current = mq.matches;
+    };
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
 
   // Every card reads the strip's one position value and derives its own place from it. The
   // geometry is a closure over props, so this has to be the card's own value rather than a
@@ -264,7 +275,7 @@ function ReelCard({
     const d = Math.abs(v);
     // Blur is intentionally disabled on phones: the side cards already get depth from
     // scale + opacity, and filter animation is expensive while the video is decoding.
-    if (reduce || typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches) {
+    if (reduce || mobile.current) {
       return "blur(0px)";
     }
     return d < 0.35 ? "blur(0px)" : d < 0.9 ? "blur(2px)" : "blur(3px)";
