@@ -19,13 +19,13 @@ const L = N * COPIES;
 const FIRST = N;
 
 /** Start fetching before the strip is needed, so the first seconds aren't dropped. */
-const WARM_MARGIN = "400px 0px";
+const WARM_MARGIN = "900px 0px";
 /** "Entering the section" = the reel wall is the dominant thing on screen. The strip is a
  *  fixed slice of viewport height, so it is always shorter than the viewport and reachable. */
 const PLAY_AT = 0.3;
 
 /** Exponential ease constant for the settle. Cinematic: quick out, long tail, no overshoot. */
-const EASE = 0.002;
+const SETTLE_SPEED = 14;
 /** How far a flick is projected, in seconds, when picking the reel it lands on. */
 const FLICK = 0.18;
 /** A trackpad swipe steps one reel per this many ms — a long swipe shouldn't skip the reel. */
@@ -262,7 +262,12 @@ function ReelCard({
   });
   const blur = useTransform(f, (v) => {
     const d = Math.abs(v);
-    return reduce ? "blur(0px)" : d < 0.35 ? "blur(0px)" : d < 0.9 ? "blur(2px)" : "blur(3px)";
+    // Blur is intentionally disabled on phones: the side cards already get depth from
+    // scale + opacity, and filter animation is expensive while the video is decoding.
+    if (reduce || typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches) {
+      return "blur(0px)";
+    }
+    return d < 0.35 ? "blur(0px)" : d < 0.9 ? "blur(2px)" : "blur(3px)";
   });
 
   return (
@@ -285,6 +290,7 @@ function ReelCard({
         // Decoding happens on one element at a time: the centre plays, its neighbours are
         // held at metadata, and the whole set is released again when the section is left.
         preload={inView ? (isActive ? "auto" : isNeighbour ? "metadata" : "none") : "none"}
+        loading="lazy"
         poster={reel.poster}
         muted
         playsInline
@@ -472,7 +478,9 @@ export default function CinematicReelCarousel() {
           st.pos = st.target;
           st.target = null;
         } else {
-          st.pos += (st.target - st.pos) * (1 - Math.pow(EASE, dt * 1000));
+          // Frame-rate independent exponential settle. The previous power expression
+          // effectively jumped to the target in one frame, which was especially visible on phones.
+          st.pos += (st.target - st.pos) * (1 - Math.exp(-SETTLE_SPEED * dt));
           if (Math.abs(st.target - st.pos) < 0.0012) {
             st.pos = st.target;
             st.target = null;
