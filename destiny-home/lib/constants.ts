@@ -11,7 +11,7 @@ export const SITE = {
    * Canonical origin. One source for metadataBase, the sitemap, JSON-LD ids and og:url —
    * these used to be hardcoded in three files, which is how they drift apart.
    */
-  url: "https://destiny-site-omega.vercel.app",
+  url: "https://destinyeventsandphotography.com",
   whatsapp: "919108727795",
   email: "destinyeventsandphotography@gmail.com",
   instagram: "https://www.instagram.com/destinyeventsandphotography/",
