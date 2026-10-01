@@ -66,9 +66,10 @@ if (process.env.NODE_ENV === "development") {
  *  mute control and iOS autoplay rules all behave identically there. */
 export const WORK_FILM = {
   // The S&S wedding film, 4K source transcoded to 1080p. Landscape, so the frame is
-  // 16:9 at every size. `src720` would send phones a lighter cut of the same film;
-  // it is not set, so phones get the master too.
+  // 16:9 at every size. `src720` is a 720p cut of this same film: without it phones
+  // pull the ~64MB master, which is far more than the frame justifies on a phone.
   src: "/media/work-weddings.mp4",
+  src720: "/media/work-weddings-720.mp4",
   poster: "/media/work-weddings-poster.jpg",
   title: "S&S",
   caption: "Wedding film",

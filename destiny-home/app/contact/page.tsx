@@ -15,8 +15,13 @@ export default function ContactPage() {
     <>
       <section className="pb-10 pt-28 md:pb-14 md:pt-36">
         <Container>
+          {/* `min-w-0` on both columns. A grid item's automatic minimum size is its
+              min-content width, and the form's widest control (the event-type select,
+              whose longest option is "Baby shower / Naming ceremony") sets that floor.
+              Without this the track refuses to shrink below the select and the whole page
+              scrolls sideways on phones narrower than ~430px. */}
           <div className="grid gap-12 md:grid-cols-[1.3fr_1fr] md:gap-16">
-            <div>
+            <div className="min-w-0">
               <h1 className="max-w-[14ch] font-display text-[clamp(34px,7vw,56px)] font-normal italic leading-[1.05]">
                 Tell us what you&rsquo;re planning.
               </h1>
@@ -27,7 +32,7 @@ export default function ContactPage() {
                 <EnquiryForm />
               </div>
             </div>
-            <div className="md:pt-2">
+            <div className="min-w-0 md:pt-2">
               <DirectContact />
               <TrustRow />
             </div>

@@ -3,13 +3,17 @@
 import { useId, useMemo, useState } from "react";
 import { EVENT_TYPES, CONTACT, buildEnquiryMessage, whatsappSendUrl } from "@/lib/contact";
 
+// `min-w-0 max-w-full` alongside `w-full`: a form control's default intrinsic width is its
+// min-content width, and the select's longest option ("Baby shower / Naming ceremony") is
+// wider than a 360px viewport. `w-full` alone cannot shrink it, so the field overflows its
+// column and drags the page into a horizontal scroll. These let the control actually shrink.
 const inputCls =
-  "w-full border-b border-line bg-transparent py-2.5 text-[15px] text-paper outline-none transition-colors placeholder:text-mute/70 focus:border-gold";
+  "w-full min-w-0 max-w-full border-b border-line bg-transparent py-2.5 text-[15px] text-paper outline-none transition-colors placeholder:text-mute/70 focus:border-gold";
 const labelCls = "mb-1.5 block text-[12px] font-semibold text-mute";
 
 function Field({ label, optional, children }: { label: string; optional?: boolean; children: React.ReactNode }) {
   return (
-    <label className="block">
+    <label className="block min-w-0 max-w-full">
       <span className={labelCls}>
         {label} {optional && <span className="font-normal text-mute/60">(optional)</span>}
       </span>
@@ -96,7 +100,7 @@ export default function EnquiryForm() {
         <input type="date" value={eventDate} onChange={(e) => setEventDate(e.target.value)} className={`${inputCls} [color-scheme:dark]`} />
       </Field>
 
-      <div className="md:col-span-2">
+      <div className="min-w-0 md:col-span-2">
         <Field label="Event type" optional>
           <select value={eventType} onChange={(e) => setEventType(e.target.value)} className={`${inputCls} appearance-none bg-[right_2px_center] bg-no-repeat`}>
             <option value="" className="bg-bg">Select an event type</option>
@@ -107,13 +111,13 @@ export default function EnquiryForm() {
         </Field>
       </div>
 
-      <div className="md:col-span-2">
+      <div className="min-w-0 md:col-span-2">
         <Field label="Anything else" optional>
           <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} className={`${inputCls} resize-none`} placeholder="Guest count, venue, anything that helps us plan" />
         </Field>
       </div>
 
-      <div className="md:col-span-2">
+      <div className="min-w-0 md:col-span-2">
         <button
           type="submit"
           className="inline-flex items-center gap-2 bg-gold px-7 py-3.5 text-sm font-bold text-bg transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"

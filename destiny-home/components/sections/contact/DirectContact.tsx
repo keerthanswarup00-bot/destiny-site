@@ -16,10 +16,12 @@ function CopyableRow({ label, value, href }: { label: string; value: string; hre
     }
   };
   return (
+    // `min-w-0` lets the value column shrink; the long unbroken email address is the
+    // widest thing in this card and would otherwise set the row's min-content floor.
     <div className="flex items-center justify-between gap-3 border-t border-line py-4 first:border-t-0">
-      <div>
+      <div className="min-w-0">
         <p className="text-[11.5px] font-semibold text-mute">{label}</p>
-        <a href={href} className="text-[15px] font-medium hover:text-gold">{value}</a>
+        <a href={href} className="block break-all text-[15px] font-medium hover:text-gold">{value}</a>
       </div>
       <button type="button" onClick={copy} className="shrink-0 text-xs font-semibold text-gold">
         {copied ? "Copied" : "Copy"}
@@ -30,7 +32,7 @@ function CopyableRow({ label, value, href }: { label: string; value: string; hre
 
 export default function DirectContact() {
   return (
-    <div className="rounded-[3px] border border-line p-6 md:p-7">
+    <div className="min-w-0 rounded-[3px] border border-line p-6 md:p-7">
       <h3 className="font-display text-xl font-normal italic">Prefer to reach us directly?</h3>
       <div className="mt-2">
         <CopyableRow label="Call" value={CONTACT.phoneDisplay} href={`tel:${CONTACT.phoneTel}`} />
