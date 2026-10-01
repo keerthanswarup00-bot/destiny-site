@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion, useEffect, useRef, type Variants } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { motion, useReducedMotion, type Variants } from "framer-motion";
 import MediaBlock from "@/components/ui/MediaBlock";
 import { HERO } from "@/lib/constants";
 
