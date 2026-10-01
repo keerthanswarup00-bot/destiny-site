@@ -186,6 +186,7 @@ export const REELS: Reel[] = [
   { id: "reel-4", src: "/media/reel-4.mp4", poster: "/media/reel-4-poster.jpg", title: "Reel 04" },
   { id: "reel-5", src: "/media/reel-5.mp4", poster: "/media/reel-5-poster.jpg", title: "Reel 05" },
   { id: "reel-6", src: "/media/reel-6.mp4", poster: "/media/reel-6-poster.jpg", title: "Reel 06" },
+  { id: "reel-7", src: "/media/reel-7.mp4", poster: "/media/reel-7-poster.jpg", title: "Reel 07" },
 ];
 
 export const REEL_SECTION = {

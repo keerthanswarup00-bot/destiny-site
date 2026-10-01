@@ -53,8 +53,11 @@ export const AMAN = {
     "Full production",
     "Fashion and editorial influence",
   ],
-  /** No photograph of Aman ships yet. MediaBlock renders a labelled placeholder until one is set. */
-  portrait: undefined as string | undefined,
+  /**
+   * 2:3 source, cropped to the 4/5 frame by `object-cover`. The frame shows the top ~80% of the
+   * image, so keep Aman's head in the upper half if this file is ever replaced.
+   */
+  portrait: "/media/aman-portrait.jpg",
   portraitAlt: "Portrait of Aman Swaroop, founder and creative director",
   portraitLabel: "PORTRAIT — Aman Swaroop, founder",
 } as const;
