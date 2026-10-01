@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { motion, useReducedMotion, useEffect, useRef, type Variants } from "framer-motion";
 import MediaBlock from "@/components/ui/MediaBlock";
 import { HERO } from "@/lib/constants";
 
@@ -15,9 +15,37 @@ const line: Variants = {
  */
 export default function HeroMedia() {
   const reduce = useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    const video = videoRef.current;
+    if (!section || !video || !HERO.video) return;
+
+    const play = () => {
+      video.muted = true;
+      const promise = video.play();
+      promise?.catch(() => {});
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) play();
+        else video.pause();
+      },
+      { threshold: 0.25 },
+    );
+
+    observer.observe(section);
+    return () => {
+      observer.disconnect();
+      video.pause();
+    };
+  }, []);
 
   return (
-    <section className="relative h-[100svh] min-h-[520px] w-full overflow-hidden [&_button]:hidden">
+    <section ref={sectionRef} className="relative h-[100svh] min-h-[520px] w-full overflow-hidden [&_button]:hidden">
       <motion.div
         className="absolute inset-0"
         initial={reduce ? false : { scale: 1.08 }}
@@ -36,9 +64,9 @@ export default function HeroMedia() {
         {HERO.video && (
           <video
             className="absolute inset-0 h-full w-full object-cover"
+            ref={videoRef}
             src={HERO.video}
             poster={HERO.image}
-            autoPlay
             muted
             loop
             playsInline
