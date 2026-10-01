@@ -297,10 +297,11 @@ function ReelCard({
         // The `src` is attached only once the section is within reach. A poster is always
         // present, so an unsourced element is a still frame rather than a blank box — and a
         // reel nobody has scrolled to yet costs zero bytes.
-        src={warm && live ? reel.src : undefined}
-        // Decoding happens on one element at a time: the centre plays, its neighbours are
-        // held at metadata, and the whole set is released again when the section is left.
-        preload={inView ? (isActive ? "auto" : isNeighbour ? "metadata" : "none") : "none"}
+        // Keep the centre and adjacent reels sourced before the handoff. On phones the
+        // next reel is therefore already downloading while the current one plays, eliminating
+        // the blank frame caused by attaching a new src at the exact moment of transition.
+        src={warm && (live || isNeighbour) ? reel.src : undefined}
+        preload={inView ? (isActive || isNeighbour ? "auto" : "none") : (warm && isNeighbour ? "metadata" : "none")}
         poster={reel.poster}
         muted
         playsInline
@@ -395,9 +396,20 @@ export default function CinematicReelCarousel() {
     const v = videos.current[physical];
     if (!v) return;
 
+    // The next reel has already been sourced and preloaded while it was a neighbour.
+    // Do not wait for React or a fresh network request before starting the handoff.
     rewind(v);
     v.muted = sound.current; // property, not attribute — required for iOS playback
-    run(true);
+    if (v.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+      run(true);
+    } else {
+      const retry = () => {
+        v.removeEventListener("canplay", retry);
+        if (centreCard.current === physical && inView.current && !held.current) run(true);
+      };
+      v.addEventListener("canplay", retry, { once: true });
+      v.load();
+    }
   };
 
   useEffect(() => {
@@ -672,6 +684,8 @@ export default function CinematicReelCarousel() {
   /** The reel ran out: hand over to the next one. Its length is the only clock there is. */
   const onEnded = (physical: number) => {
     if (centreCard.current !== physical) return;
+    // The next reel has been preloaded as a neighbour, so hand off immediately rather
+    // than rendering a poster/blank frame between films.
     setPlaying(false);
     api.current?.step(1);
   };
