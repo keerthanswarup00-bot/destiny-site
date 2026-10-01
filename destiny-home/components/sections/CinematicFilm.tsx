@@ -89,6 +89,7 @@ export default function CinematicFilm({
   const poster = film.vertical ? film.posterVertical ?? film.poster : film.poster;
   const [started, setStarted] = useState(false); // video has taken over from the poster
   const [muted, setMuted] = useState(true);
+  const [controlsVisible, setControlsVisible] = useState(false);
   const manual = useRef(false); // viewer took over, so stop yanking them back
   const everAuto = useRef(false); // first autoplay still has to be silent
 
@@ -158,6 +159,10 @@ export default function CinematicFilm({
     start(false);
   };
 
+  const toggleControls = () => {
+    setControlsVisible((visible) => !visible);
+  };
+
   const toggleMute = () => {
     const v = videoRef.current;
     if (!v) return;
@@ -205,9 +210,13 @@ export default function CinematicFilm({
             poster={poster}
             playsInline
             muted
-            controls={started}
+            controls={controlsVisible}
             preload="none"
-            onEnded={() => setStarted(false)}
+            onClick={toggleControls}
+            onEnded={() => {
+              setStarted(false);
+              setControlsVisible(false);
+            }}
           >
             {/* Order matters: browsers take the first match. A vertical reel is one file
                 for every size; a landscape film sends phones the lighter 720p cut and
