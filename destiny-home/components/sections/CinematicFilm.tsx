@@ -159,8 +159,11 @@ export default function CinematicFilm({
     start(false);
   };
 
-  const toggleControls = () => {
-    setControlsVisible((visible) => !visible);
+  const revealControls = () => {
+    // Native Safari/iOS controls auto-hide after interaction. Keep the attribute
+    // enabled once the viewer has explicitly asked for controls so subsequent taps
+    // can bring them back without re-rendering the player.
+    if (!controlsVisible) setControlsVisible(true);
   };
 
   const toggleMute = () => {
@@ -212,7 +215,7 @@ export default function CinematicFilm({
             muted
             controls={controlsVisible}
             preload="none"
-            onClick={toggleControls}
+            onClick={revealControls}
             onEnded={() => {
               setStarted(false);
               setControlsVisible(false);
