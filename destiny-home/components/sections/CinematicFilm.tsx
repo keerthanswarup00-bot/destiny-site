@@ -8,7 +8,7 @@ import { FILM } from "@/lib/constants";
 /** Start buffering before the frame is needed, so the first seconds aren't dropped. */
 const WARM_MARGIN = "400px 0px";
 /** "Entering the section" = the frame is the dominant thing on screen. */
-const PLAY_AT = 0.5;
+const PLAY_AT = 0.15;
 
 /** Speaker glyphs, inline so the site keeps its zero-runtime-dependency footprint. */
 function VolumeIcon({ muted }: { muted: boolean }) {
@@ -136,19 +136,38 @@ export default function CinematicFilm({
       { rootMargin: WARM_MARGIN }
     );
 
-    // Play on arrival, pause on exit so we don't decode video nobody is watching.
+    // Play as soon as the film enters the viewport. The explicit play attempt below
+    // complements the autoplay attribute so iOS/Safari gets both paths: native autoplay
+    // when allowed, and an imperative muted play when the observer reports visibility.
     const gate = new IntersectionObserver(
       ([e]) => {
         if (reduce) return;
-        if (e.isIntersecting) start(true);
-        else if (!manual.current) v.pause();
+        if (e.isIntersecting) {
+          v.muted = true;
+          start(true);
+        } else if (!manual.current) {
+          v.pause();
+        }
       },
       { threshold: PLAY_AT }
     );
 
     warm.observe(el);
     gate.observe(el);
+
+    // If the Work page opens with the film already in the viewport, do not wait for a
+    // later scroll event. Give the browser one paint to establish layout, then ask it to play.
+    const kick = window.requestAnimationFrame(() => {
+      if (reduce || !el.isConnected) return;
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        v.muted = true;
+        start(true);
+      }
+    });
+
     return () => {
+      window.cancelAnimationFrame(kick);
       warm.disconnect();
       gate.disconnect();
     };
@@ -213,8 +232,9 @@ export default function CinematicFilm({
             poster={poster}
             playsInline
             muted
+            autoPlay
             controls={controlsVisible}
-            preload="none"
+            preload="auto"
             onClick={revealControls}
             onEnded={() => {
               setStarted(false);
