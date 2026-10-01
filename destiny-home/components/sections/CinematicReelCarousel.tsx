@@ -22,7 +22,7 @@ const FIRST = N;
 const WARM_MARGIN = "900px 0px";
 /** "Entering the section" = the reel wall is the dominant thing on screen. The strip is a
  *  fixed slice of viewport height, so it is always shorter than the viewport and reachable. */
-const PLAY_AT = 0.3;
+const PLAY_AT = 0.15;
 
 /** Exponential ease constant for the settle. Cinematic: quick out, long tail, no overshoot. */
 const SETTLE_SPEED = 14;
