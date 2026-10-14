@@ -35,7 +35,7 @@ export default function DestinyConnectClient() {
     video.defaultMuted = true;
     video.playsInline = true;
     video.disablePictureInPicture = true;
-    video.controlsList.add("nodownload", "noplaybackrate", "noremoteplayback");
+    video.setAttribute("controlsList", "nodownload noplaybackrate noremoteplayback");
     const play = () => {
       if (document.visibilityState !== "visible") return;
       video.play().catch(() => {
